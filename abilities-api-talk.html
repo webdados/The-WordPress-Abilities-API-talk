@@ -930,12 +930,10 @@
       <span class="s">'output_schema'</span>    => [
         <span class="s">'type'</span>       => <span class="s">'object'</span>,
         <span class="s">'properties'</span> => [
-          <span class="s">'success'</span>         => [ <span class="s">'type'</span> => <span class="s">'boolean'</span>, <span class="s">'description'</span> => <span class="s">'Whether the label was created.'</span> ],
-          <span class="s">'tracking_number'</span> => [ <span class="s">'type'</span> => <span class="s">'string'</span>,  <span class="s">'description'</span> => <span class="s">'Carrier tracking number.'</span> ],
-          <span class="s">'label_url'</span>       => [ <span class="s">'type'</span> => <span class="s">'string'</span>,  <span class="s">'description'</span> => <span class="s">'URL to download the PDF label.'</span> ],
-          <span class="s">'error_message'</span>   => [ <span class="s">'type'</span> => <span class="s">'string'</span>,  <span class="s">'description'</span> => <span class="s">'Error details when success is false.'</span> ],
+          <span class="s">'tracking_number'</span> => [ <span class="s">'type'</span> => <span class="s">'string'</span>, <span class="s">'description'</span> => <span class="s">'Carrier tracking number.'</span> ],
+          <span class="s">'label_url'</span>       => [ <span class="s">'type'</span> => <span class="s">'string'</span>, <span class="s">'description'</span> => <span class="s">'URL to download the PDF label.'</span> ],
         ],
-        <span class="s">'required'</span> => [ <span class="s">'success'</span> ],
+        <span class="s">'required'</span> => [ <span class="s">'tracking_number'</span>, <span class="s">'label_url'</span> ],
       ],
       <span class="s">'execute_callback'</span>    => <span class="s">'dpd_create_label'</span>,
       <span class="s">'permission_callback'</span> => <span class="k">fn</span>() => <span class="f">current_user_can</span>( <span class="s">'manage_woocommerce'</span> ),

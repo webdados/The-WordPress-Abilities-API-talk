@@ -176,7 +176,7 @@ Register your category on `wp_abilities_api_categories_init`. This groups your a
 
 Walk through the anatomy slowly:
 - `input_schema` — JSON Schema object. `order_id` is required, `volumes` is optional, defaults to 1
-- `output_schema` — the code shows `success: boolean` and `error_message: string`. This pattern works, but ideally your execute callback should return a `WP_Error` directly on failure — that's what all ability consumers are built to handle. The `success`/`error_message` fields are fine as supplementary data in a successful response, but don't use them as a substitute for `WP_Error`.
+- `output_schema` — only `tracking_number` and `label_url`, both required. No `success` boolean, no `error_message` string. If something goes wrong, the execute callback returns a `WP_Error` — that's the contract all ability consumers expect. Don't duplicate error handling in the output schema.
 - `permission_callback` — inline, explicit, per-ability. No more scattered `current_user_can()` checks
 - `meta.annotations` — for this ability: not readonly, not destructive, not idempotent — it creates something in the courier API
 
