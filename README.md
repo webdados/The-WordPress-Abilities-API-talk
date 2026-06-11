@@ -37,7 +37,7 @@ The live demo uses [DPD Portugal for WooCommerce](https://nakedcatplugins.com/sh
 
 ### Running the slides
 
-Open `abilities-api-talk.html` in any browser. Navigate with:
+[Open `abilities-api-talk.html` in any browser](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk.html). Navigate with:
 - **Arrow keys** or **Space** — next/previous slide
 - **Home / End** — first/last slide
 - **URL hash** — link directly to a slide: `#slide-14`
