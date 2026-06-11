@@ -29,6 +29,8 @@ The Abilities API started as a Composer package you had to install manually. In 
 
 One thing worth clarifying if it comes up: the **Abilities Explorer** — the admin screen for browsing and testing registered abilities — is **not** in WordPress core. It ships as part of the official **AI Experiments plugin** (wordpress.org/plugins/ai). It's a great dev tool, just not built-in. Install the plugin if you want a visual interface during development.
 
+Maybe show the Alfred plugin as another example of an MCP consumer that can talk to WordPress abilities.
+
 ---
 
 ## Slide 5 — Register once. Every surface discovers it.
@@ -47,6 +49,8 @@ That last column — "Coming" — is why this matters. The list will only grow. 
 ## Slide 6 — Section 2: Why better than hooks?
 
 What happens when you call `do_action` with the wrong arguments?
+
+To be clear: we're not talking about templating hooks like `the_content` or `wp_head`. We're talking about functionality hooks — the kind that trigger business logic, like `woo_dpd_portugal_issue_label`. Those are the ones the Abilities API replaces and improves upon.
 
 ---
 
@@ -92,7 +96,7 @@ The rest is JSON Schema, which you already know from the REST API. If you've wri
 
 So the actual flow today: `wp cli update --nightly --allow-root` — that's it. No separate package install needed.
 
-After that — invaluable during development. Inspect schemas, confirm registration, run abilities directly from the terminal — and without AI hallucination risk. When you test via CLI you control the input directly. Not the LLM. If it breaks here, it's your code, not the model getting creative with the parameters. Inspect schemas, confirm registration, run abilities directly from the terminal. And without AI hallucination risk. When you test via CLI you control the input directly. Not the LLM. If it breaks here, it's your code, not the model getting creative with the parameters.
+After that — invaluable during development. Inspect schemas, confirm registration, run abilities directly from the terminal — and without AI hallucination risk. When you test via CLI you control the input directly. Not the LLM. If it breaks here, it's your code, not the model getting creative with the parameters.
 
 ---
 
@@ -151,14 +155,14 @@ _Run the four demo prompts live. Go slow. Let each result land before moving to 
 
 1. "List all processing orders from the last 7 days"
 2. "Which products have stock below 5?"
-3. "What's my total revenue this week, broken down by day?"
+3. "What's my total revenue this week, broken down by day?" — **check if processing orders are included in the revenue figure or only completed ones**
 4. "Update product #42 stock to 0"
 
 ---
 
 ## Slide 22 — Section 5: Creating your own abilities
 
-WooCommerce's built-in abilities are just the start. Your plugin can join that conversation.
+WooCommerce's built-in abilities are just the start. Your plugin can join that conversation. Note that the example we'll show is WooCommerce-specific — registering in the WooCommerce category, using WooCommerce permissions — but the principle is exactly the same for any WordPress ability in any context.
 
 ---
 
@@ -182,6 +186,8 @@ Walk through the anatomy slowly:
 
 The second argument to the filter is the ability ID string — not a `WP_Ability` object. Use `str_starts_with` to match the entire namespace. One filter, all your abilities.
 
+Important caveat: this filter is only needed because we're integrating with the **WooCommerce MCP endpoint**. If your ability wasn't WooCommerce-specific and you were targeting the standard WordPress MCP Adapter instead, you wouldn't need this — abilities are already exposed automatically to the shared adapter once registered.
+
 ---
 
 ## Slide 26 — Section 6: Live demo
@@ -194,21 +200,19 @@ Real plugin. Real courier API. The store is a demo install — because you don't
 
 Type this live into Claude Code:
 
-```
+---
+
 Get all processing orders.
 
-For each order, create a DPD shipping label for next Friday — 1 volume per order,
-unless the order contains items from the "Large Items" category,
-in which case add 1 extra volume per unit sold of that category.
+For each order, create a DPD shipping label for next Friday — 1 volume per order, unless the order contains items from the "Large Items" category, in which case add 1 extra volume per unit sold of that category.
 
-Once all labels are created, generate the end-of-day report
-and request a collection with the note "ring the bell".
+Once all labels are created, generate the end-of-day report and request a collection with the note "ring the bell".
 
-For every order where a label was created, send an SMS to the customer
-with the shipping date and tracking number.
+For every order where a label was created, send an SMS to the customer with the shipping date and tracking number.
 
 Then mark each of those orders as completed.
-```
+
+---
 
 Before running: A word of warning. Don't run this in production without testing first. Preferably not while your client is watching their Slack in real time. This prompt will also consume a frankly embarrassing number of tokens. Think of it as hiring a very capable intern and paying per word they think. Don't try this at home — or at least not on a live store.
 
@@ -228,7 +232,8 @@ Every ability you register today is automatically available to PHP, REST, WP-CLI
 
 On the last bullet: this is a practical tip worth emphasising. If you have an ability that creates shipping labels for all processing orders, the ability itself should query the orders, apply the business logic, and return a clean result. Don't ask the agent to fetch orders first, then loop, then decide volumes — that's slower, more expensive in tokens, and you're trusting the model with logic that should live in your code.
 
-**Speaker note (forward-looking):** WooCommerce 10.9, due 12 days after this talk (June 23), introduces canonical domain abilities and a new shared MCP adapter endpoint. The setup shown here still works, but the landscape is shifting. Worth watching. See `developer.woocommerce.com/2026/05/12/mcp-abilities-api-10-9/`
+**>>> FORWARD-LOOKING NOTE (say this on stage) <<<**
+WooCommerce 10.9, due 12 days after this talk (June 23), introduces canonical domain abilities and a new shared MCP adapter endpoint. The setup shown here still works, but the landscape is shifting. Worth watching. See: developer.woocommerce.com/2026/05/12/mcp-abilities-api-10-9/
 
 ---
 
