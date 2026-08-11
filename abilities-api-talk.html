@@ -456,7 +456,7 @@
   <h1>The WordPress<br>Abilities API</h1>
   <p class="subtitle">And how to interact with WooCommerce<br>using human language.</p>
   <div class="meta">
-    <strong>Marco Almeida</strong> &nbsp;·&nbsp; WordPress Lisboa Meetup &nbsp;·&nbsp; June 11, 2026
+    <strong>Marco Almeida</strong> &nbsp;·&nbsp; WordPress Faro Meetup &nbsp;·&nbsp; September 3, 2026
   </div>
 </div>
 
@@ -750,109 +750,106 @@
       The goal was to lay the foundation, not ship everything at once. Core keeps the ability count small and deliberate — plugins and WooCommerce fill the gaps.<br>
       <span style="font-size:15px;color:var(--muted);margin-top:6px;display:block;">Coming in 7.1+: <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/get-active-theme</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/list-plugins</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/get-site-health</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/get-settings</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/update-settings</code></span>
     </div>
+    <div class="highlight-box warn" style="font-size:16px;color:#5a4000;">
+      <strong>Available via PHP and WP-CLI — not MCP, by default.</strong> None of these three ship with <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">meta.mcp.public</code> set to <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">true</code>. That's deliberate: registered abilities aren't exposed to MCP by default, so agents can't touch anything until a site owner explicitly opts it in — even read-only core abilities. Flip it with a <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">wp_register_ability_args</code> filter if you want Claude to see them.
+    </div>
   </div>
 </div>
 
 <!-- SLIDE 16: Section 4 intro -->
 <div class="slide slide-section" id="s16">
   <div class="section-badge" style="background:rgba(255,255,255,0.2);color:#fff;">Section 4</div>
-  <h2>Abilities API<br>&amp; WooCommerce MCP</h2>
+  <h2>Abilities API<br>&amp; the MCP Adapter</h2>
   <p class="hook">"Show me all processing orders<br>from the last 7 days."<br><br>That's it. That's the interface.</p>
 </div>
 
-<!-- SLIDE 17: Enable WooCommerce MCP -->
+<!-- SLIDE 17: Install the MCP Adapter -->
 <div class="slide" id="s17">
-  <div class="slide-num">4 / WooCommerce MCP</div>
-  <h2 class="slide-heading">Enable WooCommerce MCP</h2>
-  <p class="slide-subheading">Still in developer preview. Use a staging site — or not 😏</p>
+  <div class="slide-num">4 / MCP Adapter</div>
+  <h2 class="slide-heading">Install the MCP Adapter</h2>
+  <p class="slide-subheading">Not on WordPress.org yet — grab it from GitHub</p>
   <div class="two-col" style="flex:1;align-items:center;">
     <div>
       <div class="highlight-box" style="margin-bottom:20px;font-size:18px;">
-        <strong>Dashboard:</strong><br>
-        WooCommerce → Settings → Advanced → Features → Enable MCP Beta
+        <strong>GitHub:</strong><br>
+        github.com/WordPress/mcp-adapter → Releases → download the plugin zip → Plugins → Add New → Upload → Activate
       </div>
       <div class="highlight-box" style="font-size:18px;">
-        <strong>WP-CLI:</strong><br>
-        <code style="font-family:'JetBrains Mono',monospace;font-size:14px;">wp option update woocommerce_feature_mcp_integration_enabled yes</code>
+        <strong>Composer:</strong><br>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:14px;">composer require wordpress/mcp-adapter</code>
       </div>
     </div>
     <div class="code-block" style="font-size:16px;">
-<span class="f">add_filter</span>(
-  <span class="s">'woocommerce_features'</span>,
-  <span class="k">function</span>( <span class="n">$features</span> ) {
-    <span class="n">$features</span>[<span class="s">'mcp_integration'</span>] = <span class="k">true</span>;
-    <span class="k">return</span> <span class="n">$features</span>;
-  }
-);
+      <span style="color:var(--muted);">// No feature flag. No settings screen.</span><br>
+      <span style="color:var(--muted);">// Activation alone creates a default</span><br>
+      <span style="color:var(--muted);">// server that exposes every</span><br>
+      <span style="color:var(--muted);">// public ability automatically.</span><br><br>
+      HTTP: <span class="s">/wp-json/mcp/mcp-adapter-default-server</span><br>
+      STDIO: <span class="s">wp mcp-adapter serve</span>
     </div>
   </div>
 </div>
 
 <!-- SLIDE 18: Connect Claude Code prerequisites -->
 <div class="slide" id="s18">
-  <div class="slide-num">4 / WooCommerce MCP</div>
+  <div class="slide-num">4 / MCP Adapter</div>
   <h2 class="slide-heading">Connect Claude Code</h2>
   <p class="slide-subheading">Prerequisites</p>
   <div class="body" style="margin-bottom:24px;">
     <ul>
-      <li><strong>Node.js 22+</strong> required by the proxy — first thing to check if it breaks</li>
-      <li><strong>WooCommerce REST API key</strong> with Read/Write permissions</li>
+      <li>No Node.js, no proxy, no <code style="font-family:'JetBrains Mono',monospace;font-size:15px;">npx</code> — Claude Code speaks HTTP to the adapter directly</li>
+      <li>A WordPress user with the right capability for the abilities you'll call (e.g. <code style="font-family:'JetBrains Mono',monospace;font-size:15px;">manage_woocommerce</code>)</li>
+      <li>An <strong>Application Password</strong> for that account</li>
     </ul>
   </div>
   <div class="highlight-box" style="font-size:18px;">
-    Create the key:<br>
-    <strong>WooCommerce → Settings → Advanced → REST API → Add Key</strong><br>
-    Set permissions: <span class="pill pill-blue">Read/Write</span> &nbsp; Save your consumer key and secret.
+    Create it:<br>
+    <strong>Users → Your Profile → Application Passwords</strong><br>
+    Name it (e.g. "Claude Code") → Add New Application Password → copy it now, it's shown once.
   </div>
 </div>
 
 <!-- SLIDE 19: claude mcp add command -->
 <div class="slide" id="s19">
-  <div class="slide-num">4 / WooCommerce MCP</div>
+  <div class="slide-num">4 / MCP Adapter</div>
   <h2 class="slide-heading">Connect Claude Code</h2>
   <p class="slide-subheading">One command. Restart Claude Code. Done.</p>
   <div class="code-block" style="font-size:15px;flex:1;">
-<span class="bash-prompt">$</span> <span class="bash-cmd">claude mcp add</span> <span class="bash-arg">woocommerce_mcp</span> \
-    <span class="bash-flag">--env</span> <span class="bash-arg">WP_API_URL</span>=<span class="bash-str">https://yourstore.com/wp-json/woocommerce/mcp</span> \
-    <span class="bash-flag">--env</span> <span class="bash-arg">CUSTOM_HEADERS</span>=<span class="bash-str">'{"X-MCP-API-Key": "ck_xxx:cs_xxx"}'</span> \
-    -- <span class="bash-cmd">npx</span> <span class="bash-flag">-y</span> <span class="bash-arg">@automattic/mcp-wordpress-remote@latest</span>
+<span class="bash-comment"># Base64-encode "username:application-password" first</span>
+<span class="bash-prompt">$</span> <span class="bash-cmd">echo -n</span> <span class="bash-str">"marco:xxxx xxxx xxxx xxxx xxxx xxxx"</span> | <span class="bash-cmd">base64</span>
 
-<span class="bash-comment"># npx -y downloads and runs the proxy on demand — no permanent install needed</span>
+<span class="bash-prompt">$</span> <span class="bash-cmd">claude mcp add</span> <span class="bash-flag">--transport http</span> <span class="bash-arg">wordpress</span> \
+    <span class="bash-str">https://yourstore.com/wp-json/mcp/mcp-adapter-default-server</span> \
+    <span class="bash-flag">--header</span> <span class="bash-str">"Authorization: Basic &lt;base64-string&gt;"</span>
 
-<span class="bash-comment"># For local development without HTTPS, add:</span>
-<span class="f">add_filter</span>(
-  <span class="s">'woocommerce_mcp_allow_insecure_transport'</span>,
-  <span class="s">'__return_true'</span>
-);
+<span class="bash-comment"># No proxy, no Node — Claude Code talks HTTP straight to the adapter</span>
   </div>
 </div>
 
 <!-- SLIDE 20: What WC MCP exposes today -->
 <div class="slide" id="s20">
-  <div class="slide-num">4 / WooCommerce MCP</div>
-  <h2 class="slide-heading">What WooCommerce MCP exposes</h2>
-  <p class="slide-subheading">Nine abilities out of the box</p>
+  <div class="slide-num">4 / MCP Adapter</div>
+  <h2 class="slide-heading">What WooCommerce exposes</h2>
+  <p class="slide-subheading">Seven canonical abilities out of the box</p>
   <div style="flex:1;display:flex;align-items:center;">
     <table class="slide-table" style="font-size:22px;">
       <thead><tr><th>Domain</th><th>Abilities</th></tr></thead>
       <tbody>
         <tr>
-          <td><strong>Products</strong></td>
+          <td><strong>Orders</strong></td>
           <td>
-            <span class="pill pill-blue">list</span>&nbsp;
-            <span class="pill pill-blue">get</span>&nbsp;
-            <span class="pill pill-blue">create</span>&nbsp;
-            <span class="pill pill-blue">update</span>&nbsp;
-            <span class="pill pill-red">delete</span>
+            <span class="pill pill-blue">woocommerce/orders-query</span>&nbsp;<span style="color:var(--muted);">find orders</span><br>
+            <span class="pill pill-blue">woocommerce/order-add-note</span>&nbsp;<span style="color:var(--muted);">add order note</span><br>
+            <span class="pill pill-blue">woocommerce/order-update-status</span>&nbsp;<span style="color:var(--muted);">update order status</span>
           </td>
         </tr>
         <tr>
-          <td><strong>Orders</strong></td>
+          <td><strong>Products</strong></td>
           <td>
-            <span class="pill pill-blue">list</span>&nbsp;
-            <span class="pill pill-blue">get</span>&nbsp;
-            <span class="pill pill-blue">create</span>&nbsp;
-            <span class="pill pill-blue">update</span>
+            <span class="pill pill-blue">woocommerce/products-query</span>&nbsp;<span style="color:var(--muted);">find products</span><br>
+            <span class="pill pill-blue">woocommerce/product-create</span>&nbsp;<span style="color:var(--muted);">create product</span><br>
+            <span class="pill pill-blue">woocommerce/product-update</span>&nbsp;<span style="color:var(--muted);">update product</span><br>
+            <span class="pill pill-red">woocommerce/product-delete</span>&nbsp;<span style="color:var(--muted);">delete/trash/restore product</span>
           </td>
         </tr>
       </tbody>
@@ -862,7 +859,7 @@
 
 <!-- SLIDE 21: Live demo WC MCP -->
 <div class="slide" id="s21">
-  <div class="slide-num">4 / WooCommerce MCP</div>
+  <div class="slide-num">4 / MCP Adapter</div>
   <h2 class="slide-heading">Live demo</h2>
   <p class="slide-subheading">Natural language. Real data.</p>
   <ol class="step-list" style="margin-top:16px;">
@@ -932,6 +929,10 @@
       <span class="s">'execute_callback'</span>    => <span class="s">'dpd_create_label'</span>,
       <span class="s">'permission_callback'</span> => <span class="k">fn</span>() => <span class="f">current_user_can</span>( <span class="s">'manage_woocommerce'</span> ),
       <span class="s">'meta'</span> => [
+        <span class="s">'mcp'</span> => [
+          <span class="s">'public'</span> => <span class="k">true</span>,
+          <span class="s">'type'</span>   => <span class="s">'tool'</span>,
+        ],
         <span class="s">'annotations'</span> => [
           <span class="s">'readonly'</span>    => <span class="k">false</span>,
           <span class="s">'destructive'</span> => <span class="k">false</span>,
@@ -961,6 +962,9 @@
   <span class="n">10</span>,
   <span class="n">2</span>
 );
+  </div>
+  <div class="highlight-box warn" style="margin-top:20px;font-size:16px;color:#5a4000;">
+    <strong>Deprecated as of WooCommerce 10.9:</strong> this filter only scopes the old WooCommerce-specific MCP bridge. WooCommerce now exposes abilities through the standard WordPress MCP Adapter instead — set <code style="font-family:'JetBrains Mono',monospace;">meta.mcp.public</code> on the ability itself and it's discovered automatically, no filter needed.
   </div>
 </div>
 
@@ -1005,7 +1009,7 @@
     </ul>
   </div>
   <div class="highlight-box warn" style="margin-top:28px;font-size:17px;color:#5a4000;">
-    <strong>Note — WC 10.9 due 12 days after this talk (June 23):</strong> Introduces canonical domain abilities and a new shared MCP adapter endpoint. The setup shown here still works, but the landscape is shifting. See <a href="https://developer.woocommerce.com/2026/05/12/mcp-abilities-api-10-9/" style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#1a4a80;">developer.woocommerce.com/2026/05/12/mcp-abilities-api-10-9/</a>
+    <strong>Note:</strong> This is exactly why "register once" matters in practice. When WooCommerce deprecated its own MCP bridge in favor of the shared WordPress MCP Adapter, none of the abilities anyone had registered needed to change — only the transport in front of them did. Earlier versions of this setup (WC 10.3–10.8) used a WooCommerce-specific MCP beta with its own endpoint and feature flag. That's gone now; the Adapter shown in Section 4 is the way in.
   </div>
 </div>
 
@@ -1021,6 +1025,7 @@
         <li><a href="https://make.wordpress.org/core/2025/11/10/abilities-api-in-wordpress-6-9/">make.wordpress.org — Abilities API in WP 6.9</a></li>
         <li><a href="https://make.wordpress.org/core/2026/03/24/client-side-abilities-api-in-wordpress-7-0/">make.wordpress.org — Client-side Abilities API WP 7.0</a></li>
         <li><a href="https://developer.wordpress.org/news/2026/02/from-abilities-to-ai-agents-introducing-the-wordpress-mcp-adapter/">WordPress MCP Adapter intro</a></li>
+        <li><a href="https://github.com/WordPress/mcp-adapter">github.com/WordPress/mcp-adapter</a></li>
         <li><a href="https://developer.wordpress.org/cli/commands/ability/">WP-CLI ability command docs</a></li>
         <li><a href="https://github.com/wp-cli/ability-command">github.com/wp-cli/ability-command</a></li>
         <li><a href="https://make.wordpress.org/ai/2025/12/03/six-months-of-core-ai/">make.wordpress.org/ai — Six Months of Core AI</a></li>
@@ -1030,15 +1035,8 @@
     <div>
       <div class="ref-group refs">WooCommerce</div>
       <ul class="refs">
-        <li><a href="https://woocommerce.com/posts/woocommerce-mcp/">woocommerce.com/posts/woocommerce-mcp/</a></li>
-        <li><a href="https://developer.woocommerce.com/docs/features/mcp/">developer.woocommerce.com/docs/features/mcp/</a></li>
         <li><a href="https://developer.woocommerce.com/2026/05/12/mcp-abilities-api-10-9/">Canonical WooCommerce abilities (WC 10.9)</a></li>
-        <li><a href="https://developer.woocommerce.com/2025/11/03/call-for-testing-woocommerce-mcp-beta/">WooCommerce MCP call for testing</a></li>
-      </ul>
-      <div class="ref-group refs" style="margin-top:12px;">Proxy &amp; tooling</div>
-      <ul class="refs">
-        <li><a href="https://github.com/Automattic/mcp-wordpress-remote">github.com/Automattic/mcp-wordpress-remote</a></li>
-        <li><a href="https://github.com/WordPress/mcp-adapter">github.com/WordPress/mcp-adapter</a></li>
+        <li><a href="https://developer.woocommerce.com/docs/features/mcp/">MCP Integration architecture docs</a></li>
       </ul>
     </div>
   </div>
