@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WordPress Abilities API — Marco Almeida</title>
+<title>WordPress Abilities API: Marco Almeida</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -531,7 +531,7 @@
         <tr><td><strong>WP 6.8</strong></td><td>Composer package &amp; feature plugin</td></tr>
         <tr><td><strong>WP 6.9</strong></td><td>Merged into core · Three read-only core abilities shipped</td></tr>
         <tr><td><strong>WP 7.0</strong></td><td>JavaScript client (<code style="font-size:16px;background:#f0f0f0;padding:1px 6px;border-radius:3px;">@wordpress/abilities</code>) · Hybrid abilities · WP AI Client</td></tr>
-        <tr><td style="color:var(--muted);font-size:17px;">Abilities Explorer</td><td style="font-size:17px;color:var(--muted);">Admin screen for browsing &amp; testing abilities — available via the <strong style="color:var(--dark);">AI Experiments plugin</strong>, not core</td></tr>
+        <tr><td style="color:var(--muted);font-size:17px;">Abilities Explorer</td><td style="font-size:17px;color:var(--muted);">Admin screen for browsing &amp; testing abilities, available via the <strong style="color:var(--dark);">AI Experiments plugin</strong>, not core</td></tr>
       </tbody>
     </table>
   </div>
@@ -569,7 +569,7 @@
 <!-- SLIDE 7: Hooks are dumb -->
 <div class="slide slide-statement" id="s7">
   <div class="big">Nothing. Silently. It just runs.</div>
-  <div class="answer">Hooks are powerful but dumb. They don't validate input. They don't document output. They don't check permissions unless you remember to add that yourself — and we all know how that ends. <em>Half the WordPress plugin vulnerability database says hi.</em></div>
+  <div class="answer">Hooks are powerful but dumb. They don't validate input. They don't document output. They don't check permissions unless you remember to add that yourself, and we all know how that ends. <em>Half the WordPress plugin vulnerability database says hi.</em></div>
 </div>
 
 <!-- SLIDE 8: Validation chain -->
@@ -589,9 +589,9 @@
   <div class="chain-error">Any failure → clean <code>WP_Error</code>. Your callback never sees bad data.</div>
   <div style="margin-top:28px;" class="body">
     <ul>
-      <li><strong>Typed input &amp; output</strong> — JSON Schema, validated before your code runs</li>
-      <li><strong>Permission callback</strong> — per-ability, centralized, auditable</li>
-      <li><strong>Self-describing</strong> — label, description, schemas, all introspectable at runtime</li>
+      <li><strong>Typed input &amp; output</strong>: JSON Schema, validated before your code runs</li>
+      <li><strong>Permission callback</strong>: per-ability, centralized, auditable</li>
+      <li><strong>Self-describing</strong>: label, description, schemas, all introspectable at runtime</li>
     </ul>
   </div>
 </div>
@@ -615,7 +615,7 @@
       <div class="ann-desc">Safe to retry with the same input. Same result every time.</div>
     </div>
   </div>
-  <div class="highlight-box">These map directly to MCP hints. Agents read them before calling — so your annotations control AI behavior.</div>
+  <div class="highlight-box">These map directly to MCP hints. Agents read them before calling, so your annotations control AI behavior.</div>
 </div>
 
 <!-- SLIDE 10: Hooks vs Abilities -->
@@ -656,19 +656,19 @@
   <h2 class="slide-heading">The functions</h2>
   <p class="slide-subheading">Register · Discover · Execute</p>
   <div class="code-block large" style="flex:1;">
-<span class="c">// Step 1 — Register your category</span>
+<span class="c">// Step 1: Register your category</span>
 <span class="c">// Hook: wp_abilities_api_categories_init</span>
 <span class="f">wp_register_ability_category</span>()
 
-<span class="c">// Step 2 — Register your ability</span>
+<span class="c">// Step 2: Register your ability</span>
 <span class="c">// Hook: wp_abilities_api_init</span>
 <span class="f">wp_register_ability</span>()
 
-<span class="c">// Step 3 — Discover what's registered</span>
+<span class="c">// Step 3: Discover what's registered</span>
 <span class="f">wp_get_abilities</span>()
 <span class="f">wp_get_ability</span>( <span class="s">'namespace/name'</span> )
 
-<span class="c">// Step 4 — Execute from PHP</span>
+<span class="c">// Step 4: Execute from PHP</span>
 <span class="n">$ability</span> = <span class="f">wp_get_ability</span>( <span class="s">'namespace/name'</span> );
 <span class="n">$result</span>  = <span class="n">$ability</span>-><span class="f">execute</span>( [ <span class="s">'order_id'</span> => <span class="n">42</span> ] );
 <span class="k">if</span> ( <span class="f">is_wp_error</span>( <span class="n">$result</span> ) ) {
@@ -686,8 +686,8 @@
   <p class="slide-subheading">Test without the LLM getting creative</p>
   <div style="display:grid;grid-template-columns:1fr 280px;gap:24px;flex:1;min-height:0;">
     <div class="code-block large" style="height:100%;">
-<span class="bash-comment"># <s>Requires WP-CLI 2.13+ — wp package install wp-cli/ability-command</s></span>
-<span class="bash-comment"># Bundled in WP-CLI nightly (next stable: 3.0) — just update:</span>
+<span class="bash-comment"># <s>Requires WP-CLI 2.13+: wp package install wp-cli/ability-command</s></span>
+<span class="bash-comment"># Bundled in WP-CLI nightly (next stable: 3.0), just update:</span>
 <span class="bash-prompt">$</span> <span class="bash-cmd">wp cli update</span> <span class="bash-flag">--nightly --allow-root</span>
 
 <span class="bash-comment"># List all registered abilities</span>
@@ -736,7 +736,7 @@
         </tr>
         <tr>
           <td><code style="font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--purple);">core/get-user-info</code></td>
-          <td>Current user's basic profile — login, display name, email, roles</td>
+          <td>Current user's basic profile: login, display name, email, roles</td>
           <td><span class="pill pill-blue">user</span></td>
         </tr>
         <tr>
@@ -747,11 +747,11 @@
       </tbody>
     </table>
     <div class="highlight-box" style="font-size:17px;">
-      The goal was to lay the foundation, not ship everything at once. Core keeps the ability count small and deliberate — plugins and WooCommerce fill the gaps.<br>
+      The goal was to lay the foundation, not ship everything at once. Core keeps the ability count small and deliberate; plugins and WooCommerce fill the gaps.<br>
       <span style="font-size:15px;color:var(--muted);margin-top:6px;display:block;">Coming in 7.1+: <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/get-active-theme</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/list-plugins</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/get-site-health</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/get-settings</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/update-settings</code></span>
     </div>
     <div class="highlight-box warn" style="font-size:16px;color:#5a4000;">
-      <strong>Available via PHP and WP-CLI — not MCP, by default.</strong> None of these three ship with <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">meta.mcp.public</code> set to <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">true</code>. That's deliberate: registered abilities aren't exposed to MCP by default, so agents can't touch anything until a site owner explicitly opts it in — even read-only core abilities. Flip it with a <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">wp_register_ability_args</code> filter if you want Claude to see them.
+      <strong>Available via PHP and WP-CLI, not MCP, by default.</strong> None of these three ship with <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">meta.mcp.public</code> set to <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">true</code>. That's deliberate: registered abilities aren't exposed to MCP by default, so agents can't touch anything until a site owner explicitly opts it in, even read-only core abilities. Flip it with a <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">wp_register_ability_args</code> filter if you want Claude to see them.
     </div>
   </div>
 </div>
@@ -767,7 +767,7 @@
 <div class="slide" id="s17">
   <div class="slide-num">4 / MCP Adapter</div>
   <h2 class="slide-heading">Install the MCP Adapter</h2>
-  <p class="slide-subheading">Not on WordPress.org yet — grab it from GitHub</p>
+  <p class="slide-subheading">Not on WordPress.org yet, grab it from GitHub</p>
   <div class="two-col" style="flex:1;align-items:center;">
     <div>
       <div class="highlight-box" style="margin-bottom:20px;font-size:18px;">
@@ -797,7 +797,7 @@
   <p class="slide-subheading">Prerequisites</p>
   <div class="body" style="margin-bottom:24px;">
     <ul>
-      <li>No Node.js, no proxy, no <code style="font-family:'JetBrains Mono',monospace;font-size:15px;">npx</code> — Claude Code speaks HTTP to the adapter directly</li>
+      <li>No Node.js, no proxy, no <code style="font-family:'JetBrains Mono',monospace;font-size:15px;">npx</code>: Claude Code speaks HTTP to the adapter directly</li>
       <li>A WordPress user with the right capability for the abilities you'll call (e.g. <code style="font-family:'JetBrains Mono',monospace;font-size:15px;">manage_woocommerce</code>)</li>
       <li>An <strong>Application Password</strong> for that account</li>
     </ul>
@@ -822,7 +822,7 @@
     <span class="bash-str">https://yourstore.com/wp-json/mcp/mcp-adapter-default-server</span> \
     <span class="bash-flag">--header</span> <span class="bash-str">"Authorization: Basic &lt;base64-string&gt;"</span>
 
-<span class="bash-comment"># No proxy, no Node — Claude Code talks HTTP straight to the adapter</span>
+<span class="bash-comment"># No proxy, no Node: Claude Code talks HTTP straight to the adapter</span>
   </div>
 </div>
 
@@ -964,7 +964,7 @@
 );
   </div>
   <div class="highlight-box warn" style="margin-top:20px;font-size:16px;color:#5a4000;">
-    <strong>Deprecated as of WooCommerce 10.9:</strong> this filter only scopes the old WooCommerce-specific MCP bridge. WooCommerce now exposes abilities through the standard WordPress MCP Adapter instead — set <code style="font-family:'JetBrains Mono',monospace;">meta.mcp.public</code> on the ability itself and it's discovered automatically, no filter needed.
+    <strong>Deprecated as of WooCommerce 10.9:</strong> this filter only scopes the old WooCommerce-specific MCP bridge. WooCommerce now exposes abilities through the standard WordPress MCP Adapter instead, set <code style="font-family:'JetBrains Mono',monospace;">meta.mcp.public</code> on the ability itself and it's discovered automatically, no filter needed.
   </div>
 </div>
 
@@ -1004,12 +1004,12 @@
     <ul>
       <li>You don't rewire anything. One registration. Every surface.</li>
       <li>Your plugin becomes <strong>discoverable</strong>. Composable. Agent-ready.</li>
-      <li>The list of consumers will only grow. Your abilities grow with it — for free.</li>
-      <li>When building abilities for deterministic workflows or analytical data: <strong>do the hard work inside the ability</strong>. Don't leave calculation or business logic to the AI agent — it's slower, less reliable, and costs tokens.</li>
+      <li>The list of consumers will only grow. Your abilities grow with it, for free.</li>
+      <li>When building abilities for deterministic workflows or analytical data: <strong>do the hard work inside the ability</strong>. Don't leave calculation or business logic to the AI agent, it's slower, less reliable, and costs tokens.</li>
     </ul>
   </div>
   <div class="highlight-box warn" style="margin-top:28px;font-size:17px;color:#5a4000;">
-    <strong>Note:</strong> This is exactly why "register once" matters in practice. When WooCommerce deprecated its own MCP bridge in favor of the shared WordPress MCP Adapter, none of the abilities anyone had registered needed to change — only the transport in front of them did. Earlier versions of this setup (WC 10.3–10.8) used a WooCommerce-specific MCP beta with its own endpoint and feature flag. That's gone now; the Adapter shown in Section 4 is the way in.
+    <strong>Note:</strong> This is exactly why "register once" matters in practice. When WooCommerce deprecated its own MCP bridge in favor of the shared WordPress MCP Adapter, none of the abilities anyone had registered needed to change, only the transport in front of them did. Earlier versions of this setup (WC 10.3–10.8) used a WooCommerce-specific MCP beta with its own endpoint and feature flag. That's gone now; the Adapter shown in Section 4 is the way in.
   </div>
 </div>
 
@@ -1022,14 +1022,14 @@
       <div class="ref-group refs">WordPress</div>
       <ul class="refs">
         <li><a href="https://developer.wordpress.org/apis/abilities-api/">developer.wordpress.org/apis/abilities-api/</a></li>
-        <li><a href="https://make.wordpress.org/core/2025/11/10/abilities-api-in-wordpress-6-9/">make.wordpress.org — Abilities API in WP 6.9</a></li>
-        <li><a href="https://make.wordpress.org/core/2026/03/24/client-side-abilities-api-in-wordpress-7-0/">make.wordpress.org — Client-side Abilities API WP 7.0</a></li>
+        <li><a href="https://make.wordpress.org/core/2025/11/10/abilities-api-in-wordpress-6-9/">make.wordpress.org: Abilities API in WP 6.9</a></li>
+        <li><a href="https://make.wordpress.org/core/2026/03/24/client-side-abilities-api-in-wordpress-7-0/">make.wordpress.org: Client-side Abilities API WP 7.0</a></li>
         <li><a href="https://developer.wordpress.org/news/2026/02/from-abilities-to-ai-agents-introducing-the-wordpress-mcp-adapter/">WordPress MCP Adapter intro</a></li>
         <li><a href="https://github.com/WordPress/mcp-adapter">github.com/WordPress/mcp-adapter</a></li>
         <li><a href="https://developer.wordpress.org/cli/commands/ability/">WP-CLI ability command docs</a></li>
         <li><a href="https://github.com/wp-cli/ability-command">github.com/wp-cli/ability-command</a></li>
-        <li><a href="https://make.wordpress.org/ai/2025/12/03/six-months-of-core-ai/">make.wordpress.org/ai — Six Months of Core AI</a></li>
-        <li><a href="https://make.wordpress.org/core/2025/12/04/ai-as-a-wordpress-fundamental/">make.wordpress.org — AI as a WordPress Fundamental</a></li>
+        <li><a href="https://make.wordpress.org/ai/2025/12/03/six-months-of-core-ai/">make.wordpress.org/ai: Six Months of Core AI</a></li>
+        <li><a href="https://make.wordpress.org/core/2025/12/04/ai-as-a-wordpress-fundamental/">make.wordpress.org: AI as a WordPress Fundamental</a></li>
       </ul>
     </div>
     <div>
