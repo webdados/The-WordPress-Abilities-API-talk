@@ -404,6 +404,56 @@
   .pill-green { background: #e6f9ed; color: #2d7d46; }
   .pill-red { background: #ffeef0; color: #c0392b; }
 
+  /* Staged reveal fragments */
+  .fragment { opacity: 0; transition: opacity 0.4s ease; }
+  .fragment.visible { opacity: 1; }
+
+  /* Ability comparison columns (slide: manual vs batch) */
+  .compare-col {
+    background: #fafbfc;
+    border: 1px solid #e5e9ef;
+    border-radius: 12px;
+    padding: 22px 26px;
+    height: 100%;
+  }
+  .compare-col h3 {
+    font-size: 19px;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+  .compare-col .compare-sub {
+    font-size: 14.5px;
+    color: var(--muted);
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  .compare-col ul {
+    list-style: none;
+    padding: 0;
+  }
+  .compare-col ul li {
+    font-size: 15px;
+    color: var(--dark);
+    margin-bottom: 9px;
+    line-height: 1.4;
+  }
+  .compare-col .tag {
+    font-size: 13px;
+    color: var(--muted);
+    margin-left: 6px;
+  }
+  .compare-col .internal-note {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 10px 0 8px 0;
+    font-style: italic;
+  }
+  .compare-col .pill {
+    font-size: 13px;
+    padding: 3px 10px;
+    border-radius: 10px;
+  }
+
   /* Highlight box */
   .highlight-box {
     background: #f0f8ff;
@@ -945,10 +995,10 @@
   </div>
 </div>
 
-<!-- SLIDE 25: Expose on WC MCP -->
+<!-- SLIDE 25: The legacy filter -->
 <div class="slide" id="s25">
   <div class="slide-num">5 / Creating abilities</div>
-  <h2 class="slide-heading">Step 3: Expose on WooCommerce MCP</h2>
+  <h2 class="slide-heading">Step 3: The legacy filter</h2>
   <p class="slide-subheading">One filter. Your entire namespace. Visible to Claude Code.</p>
   <div class="code-block large" style="flex:1;">
 <span class="f">add_filter</span>(
@@ -984,19 +1034,60 @@
     <div style="text-align:center;">
       <div style="font-size:80px;margin-bottom:24px;">💬</div>
       <div style="font-size:28px;color:var(--muted);font-style:italic;">[ live demo ]</div>
+      <div class="fragment" style="font-size:34px;color:var(--dark);font-weight:700;margin-top:32px;">How cool was that?</div>
+      <div class="fragment" style="font-size:26px;color:#c0392b;font-weight:600;margin-top:14px;">Well... it depends.</div>
     </div>
   </div>
 </div>
 
-<!-- SLIDE 28: Section 7 closing -->
-<div class="slide slide-section" id="s28">
+<!-- SLIDE 28: Same abilities, smarter caller -->
+<div class="slide" id="s28">
+  <div class="slide-num">6 / Live demo</div>
+  <h2 class="slide-heading" style="margin-bottom:6px;">Same abilities. Smarter caller.</h2>
+  <p class="slide-subheading" style="font-size:22px;margin-bottom:20px;">Fine for a one-off demo. Wasteful for the exact same job every day.</p>
+  <div class="two-col" style="margin-top:4px;gap:32px;">
+    <div class="compare-col">
+      <h3>🎬 Live demo (interactive)</h3>
+      <div class="compare-sub">Claude orchestrates one call at a time, doing the counting, category checks, and next-step decisions itself in between</div>
+      <ul>
+        <li><span class="pill pill-blue">woocommerce/orders-query</span><span class="tag">once</span></li>
+        <li><span class="pill pill-blue">woocommerce/products-query</span><span class="tag">looped per line item, uncached, to resolve category for the volume rule</span></li>
+        <li><span class="pill pill-blue">woo-dpd-portugal/create-shipping-label</span><span class="tag">× order</span></li>
+        <li><span class="pill pill-blue">woocommerce/order-add-note</span><span class="tag">× order</span></li>
+        <li><span class="pill pill-blue">woocommerce/order-update-status</span><span class="tag">× order</span></li>
+        <li><span class="pill pill-blue">webdados-toolbox/send-sms</span><span class="tag">× order</span></li>
+        <li><span class="pill pill-blue">woo-dpd-portugal/request-collect</span><span class="tag">once</span></li>
+        <li><span class="pill pill-blue">woo-dpd-portugal/end-of-day-report</span><span class="tag">once</span></li>
+      </ul>
+    </div>
+    <div class="compare-col">
+      <h3>⚙️ Daily batch (one call)</h3>
+      <div class="compare-sub">One prompt calls one ability, not sixty</div>
+      <ul>
+        <li><span class="pill pill-purple">my-custom-abilities/process-daily-orders</span><span class="tag">input: a date</span></li>
+      </ul>
+      <div class="internal-note">Internally, in PHP, no LLM in the loop, it calls the exact same abilities:</div>
+      <ul>
+        <li><span class="pill pill-blue">orders-query</span> → <span class="pill pill-blue">products-query</span> <span class="tag">looped per product, cached</span></li>
+        <li><span class="pill pill-blue">create-shipping-label</span> → <span class="pill pill-blue">order-add-note</span> → <span class="pill pill-blue">order-update-status</span> → <span class="pill pill-blue">send-sms</span> <span class="tag">looped server-side</span></li>
+        <li><span class="pill pill-blue">request-collect</span> → <span class="pill pill-blue">end-of-day-report</span> <span class="tag">once, to close the day</span></li>
+      </ul>
+      <div class="highlight-box" style="margin-top:16px;font-size:14px;padding:12px 16px;line-height:1.45;">
+        Someone still has to write that PHP: the loop, the sequencing, the error handling. That's the developer's job, and it's exactly what turns AI into something that saves you money on daily token usage instead of costing you more.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 29: Section 7 closing -->
+<div class="slide slide-section" id="s29">
   <div class="section-badge" style="background:rgba(255,255,255,0.2);color:#fff;">Section 7</div>
   <h2>What this changes<br>for you</h2>
   <p class="hook">You've been writing hooks for years.<br>This isn't a replacement*. It's an upgrade.<br><span style="font-size:18px;color:rgba(255,255,255,0.5);">* but it can be</span></p>
 </div>
 
-<!-- SLIDE 29: What changes -->
-<div class="slide" id="s29">
+<!-- SLIDE 30: What changes -->
+<div class="slide" id="s30">
   <div class="slide-num">7 / What changes</div>
   <h2 class="slide-heading">Register once. Let everything in.</h2>
   <p class="slide-subheading">PHP · REST · WP-CLI · MCP · Command Palette · whatever comes next</p>
@@ -1013,8 +1104,8 @@
   </div>
 </div>
 
-<!-- SLIDE 30: References -->
-<div class="slide" id="s30">
+<!-- SLIDE 31: References -->
+<div class="slide" id="s31">
   <div class="slide-num">References</div>
   <h2 class="slide-heading">References</h2>
   <div class="two-col" style="flex:1;overflow:auto;">
@@ -1042,8 +1133,8 @@
   </div>
 </div>
 
-<!-- SLIDE 31: Closing -->
-<div class="slide slide-closing" id="s31">
+<!-- SLIDE 32: Closing -->
+<div class="slide slide-closing" id="s32">
   <img src="https://nakedcatplugins.com/wp-content/uploads/2025/04/wapuu-quica-naked-cat-plugins.png"
        alt="Naked Cat Plugins Wapuu"
        style="position:absolute;top:32px;right:64px;height:160px;width:auto;object-fit:contain;">
@@ -1065,7 +1156,7 @@
 <!-- Navigation -->
 <div id="nav">
   <button id="btn-prev" aria-label="Previous slide">‹</button>
-  <span id="counter">1 / 30</span>
+  <span id="counter">1 / 32</span>
   <button id="btn-next" aria-label="Next slide">›</button>
 </div>
 
@@ -1104,9 +1195,13 @@ function slideFromHash() {
 
 function show(n, pushState) {
   if (n < 0 || n >= total) return;
+  const movingBackward = n < current;
   slides[current].classList.remove('active');
   current = n;
   slides[current].classList.add('active');
+  slides[current].querySelectorAll('.fragment').forEach(f => {
+    f.classList.toggle('visible', movingBackward);
+  });
   counter.textContent = (current + 1) + ' / ' + total;
   progress.style.width = ((current + 1) / total * 100) + '%';
   const hash = '#slide-' + (current + 1);
@@ -1123,12 +1218,35 @@ window.addEventListener('popstate', e => {
   show(n, false);
 });
 
-document.getElementById('btn-next').addEventListener('click', () => show(current + 1, true));
-document.getElementById('btn-prev').addEventListener('click', () => show(current - 1, true));
+// Staged reveals within a slide (e.g. slide 27's "Well... it depends.")
+function fragmentsOf(n) {
+  return Array.from(slides[n].querySelectorAll('.fragment'));
+}
+
+function advance() {
+  const hidden = fragmentsOf(current).filter(f => !f.classList.contains('visible'));
+  if (hidden.length) {
+    hidden[0].classList.add('visible');
+    return;
+  }
+  show(current + 1, true);
+}
+
+function retreat() {
+  const visible = fragmentsOf(current).filter(f => f.classList.contains('visible'));
+  if (visible.length) {
+    visible[visible.length - 1].classList.remove('visible');
+    return;
+  }
+  show(current - 1, true);
+}
+
+document.getElementById('btn-next').addEventListener('click', advance);
+document.getElementById('btn-prev').addEventListener('click', retreat);
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') show(current + 1, true);
-  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') show(current - 1, true);
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') advance();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') retreat();
   if (e.key === 'Home') show(0, true);
   if (e.key === 'End') show(total - 1, true);
 });

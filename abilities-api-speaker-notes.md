@@ -216,7 +216,7 @@ Walk through the anatomy slowly:
 
 ---
 
-## Slide 25: Step 3: Expose on WooCommerce MCP
+## Slide 25: Step 3: The legacy filter
 
 The second argument to the filter is the ability ID string, not a `WP_Ability` object. Use `str_starts_with` to match the entire namespace. One filter, all your abilities.
 
@@ -254,15 +254,33 @@ Before running: A word of warning. Don't run this in production without testing 
 
 _Run the prompt. Stay calm. Let it work._
 
+Once it's done: let the applause land, then press next. "How cool was that?" fades in on its own, nothing shows before you press. Pause. Press next again for "Well... it depends." to fade in underneath. Press next once more to move to the following slide. If you ever step backward from slide 28 into this one, both lines come back fully visible, and prev from there hides them one at a time, so you can safely rewind mid-talk without losing your place.
+
 ---
 
-## Slide 28: Section 7: What changes for you
+## Slide 28: Same abilities, smarter caller
+
+This slide backs the "well, it depends" turn. Talk through what Claude actually did to pull off that one prompt.
+
+**Say this on stage:** walk the left column first. Point out the namespaces on each pill, not just the ability names. `woocommerce/orders-query`, `woo-dpd-portugal/create-shipping-label`, `webdados-toolbox/send-sms`. Three different plugins, three different authors, all speaking the same Abilities API, all callable from the same prompt. That's worth a beat on its own.
+
+Then walk what Claude actually had to do to get there. Finding the orders was one call. But the volume rule, "1 volume per order, unless it's a Large Items category item, then add 1 extra volume per unit", meant Claude had to look up the product category for every single line item, one `products-query` call at a time, looped, uncached, because it has no reason to know it should cache. Between every one of those calls, Claude is also the one doing the counting, checking each result, and deciding what to call next. That reasoning happens in tokens, every single time, even though the logic never changes. Then it's one `create-shipping-label`, one `order-add-note`, one `order-update-status`, one `send-sms`, per order. For 15 orders, that's not 8 tool calls, it's closer to 60, plus every round trip and every decision in between costs tokens and latency.
+
+Now the turn: if this is the exact same job, same rules, every single morning, none of that reasoning is needed at all. That's the right column. One custom ability, `my-custom-abilities/process-daily-orders`, takes a date. Same "one prompt" experience for whoever triggers it, but now the prompt calls one ability, not sixty.
+
+**The part worth lingering on:** the custom ability isn't a rewrite. It calls the exact same abilities Claude called, `orders-query`, `products-query`, `create-shipping-label`, and the rest, just from PHP instead of from an LLM. The `products-query` lookups are still looped, they still happen once per product, but now they're cached, so the same product's category is only ever resolved once, not once per order it appears in. Same abilities. Same "register once" foundation from earlier in the talk. The only thing that changed is who's doing the calling, and whether that caller needs to reason about it or can just execute it.
+
+**Close the loop for the room:** that PHP doesn't write itself. Someone still has to build the loop, sequence the calls correctly, and handle what happens when a label fails to generate or an SMS bounces. That's the developer's job, and it's a good one to have. It's exactly what turns "AI can do this" into "AI does this cheaply, every day, without supervision." Prompting an agent is for exploratory, judgment-heavy, or one-off work. A fixed daily job with fixed rules is deterministic code. Dressed up as a prompt, it's still deterministic code, just a slower and more expensive version of it, until a developer wraps it properly.
+
+---
+
+## Slide 29: Section 7: What changes for you
 
 You've been writing hooks for years. This isn't a replacement. It's an upgrade.
 
 ---
 
-## Slide 29: Register once. Let everything in.
+## Slide 30: Register once. Let everything in.
 
 Every ability you register today is automatically available to PHP, REST, WP-CLI, MCP, the Command Palette, and whatever surfaces come next. You don't rewire anything.
 
@@ -273,13 +291,13 @@ Worth calling out explicitly: this is "register once" playing out in the real wo
 
 ---
 
-## Slide 30: References
+## Slide 31: References
 
 _Leave this slide up during Q&A. Invite people to scan/copy the links._
 
 ---
 
-## Slide 31: Questions or suggestions?
+## Slide 32: Questions or suggestions?
 
 _Done. Breathe. Take questions._
 
