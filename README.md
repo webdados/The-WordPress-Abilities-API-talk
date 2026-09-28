@@ -39,7 +39,7 @@ Both cover the same ideas and share the same facts. The 30-minute version is tig
 
 1. **Introduction**: What is the Abilities API? Timeline. Consumers.
 2. **Technical**: Why better than hooks? Validation chain. Annotations.
-3. **How to use**: Functions, WP-CLI, core abilities.
+3. **How to use**: Functions, WP-CLI (60-minute version), core abilities.
 4. **Abilities API & the MCP Adapter**: Install the adapter, connect Claude Code, live demo.
 5. **Creating your own abilities**: Register, define schemas, expose on MCP.
 6. **Live demo**: DPD Portugal for WooCommerce full workflow.

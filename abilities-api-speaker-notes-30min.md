@@ -134,7 +134,7 @@ But exposure isn't authorisation. `public` decides who can *see* an ability; the
 
 **Skip if behind:** 7.1 added more user fields (name, bio, URL) and a `fields` input to ask for only what you need.
 
-**Only if asked:** read abilities for settings, content and users were proposed for 7.1 and didn't land. They're in the AI plugin for now; core wants proof of adoption first.
+**Only if asked:** read abilities for settings, content and users were proposed for 7.1 and didn't land. The 7.2 roadmap keeps new abilities in the AI plugin until they show real adoption.
 
 ---
 
@@ -270,7 +270,7 @@ You've been writing hooks for years. This isn't a replacement. It's an upgrade.
 
 ## Slide 25: Register once. Let everything in.
 
-One registration, every surface: PHP, REST, WP-CLI, MCP, the Command Palette, and whatever comes next.
+One registration, every surface: PHP, REST, WP-CLI, MCP, JavaScript, and whatever comes next.
 
 Last bullet: already made on slide 23, and it's the payoff for slide 17's sales total, where the agent guessed what counts and did the maths. Point at it, five seconds.
 

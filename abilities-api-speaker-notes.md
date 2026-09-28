@@ -25,7 +25,7 @@ Right now, probably not.
 
 ## Slide 4: Timeline
 
-The Abilities API started as a Composer package you had to install manually. In WordPress 6.9 it landed in core (no plugin, no Composer entry needed) and shipped the first three core abilities. WordPress 7.0 added the JavaScript client (`@wordpress/abilities`), hybrid abilities for chaining capabilities into workflows, and the WP AI Client in core, which is the provider-agnostic PHP layer for connecting to AI models. WordPress 7.1 added a unified `meta.public` flag (one place to say "this ability is meant for external clients"), lifecycle filters around execution, and filtering in `wp_get_abilities()`.
+The Abilities API started as a Composer package you had to install manually. In WordPress 6.9 it landed in core (no plugin, no Composer entry needed) and shipped the first three core abilities. WordPress 7.0 added the JavaScript client (`@wordpress/abilities`), hybrid abilities, and the WP AI Client in core, which is the provider-agnostic PHP layer for connecting to AI models. WordPress 7.1 added a unified `meta.public` flag (one place to say "this ability is meant for external clients"), lifecycle filters around execution, and filtering in `wp_get_abilities()`.
 
 One thing worth clarifying if it comes up: the **Abilities Explorer**, the admin screen for browsing and testing registered abilities, is **not** in WordPress core. It ships as part of the official **AI plugin** (wordpress.org/plugins/ai). It's a great dev tool, just not built-in. Install the plugin if you want a visual interface during development.
 
@@ -35,7 +35,7 @@ Maybe show the Alfred plugin as another example of an MCP consumer that can talk
 
 ## Slide 5: Register once. Every surface discovers it.
 
-That last column, "Coming," is why this matters. The list will only grow. You register your abilities today, and every new surface WordPress ships picks them up automatically. You don't rewire anything.
+Those "Coming" rows are why this matters. The list will only grow. You register your abilities today, and every new surface WordPress ships picks them up automatically. You don't rewire anything.
 
 **Notes on "Coming" items, in case anyone asks:**
 
@@ -58,7 +58,7 @@ To be clear: we're not talking about templating hooks like `the_content` or `wp_
 
 ## Slide 7: Nothing. Silently. It just runs.
 
-Hooks are powerful but dumb. They don't validate input. They don't document output. They don't check permissions unless you remember to add that yourself, and we all know how that ends. Half the WordPress vulnerability database says hi.
+Hooks are powerful but dumb. They don't validate input. They don't document output. They don't check permissions unless you remember to add that yourself, and we all know how that ends. Half the WordPress plugin vulnerability database says hi.
 
 ---
 
@@ -122,7 +122,7 @@ _Footnote on the slide lists the other functions (unregister, has, the category 
 
 **Important:** The slide has a strikethrough on the old info, use that as a moment. Originally I had "requires WP-CLI 2.13, install as a separate package." Then Alain Schlesser told me the nightly already bundles the ability command, so you just update to nightly. And the next stable won't be 2.13, it'll be 3.0. This is what happens when you prepare a talk about moving-target technology the week it ships. Keeps you humble.
 
-So the actual flow today: `wp cli update --nightly --allow-root`. That's it. No separate package install needed.
+So the actual flow today: `wp cli update --nightly --allow-root`, and the command is there. Staying on stable (2.12)? Then it's still the separate package: `wp package install wp-cli/ability-command`. Once 3.0 ships, it's built in for everyone.
 
 After that, it's invaluable during development. Inspect schemas, confirm registration, run abilities directly from the terminal, and without AI hallucination risk. When you test via CLI you control the input directly. Not the LLM. If it breaks here, it's your code, not the model getting creative with the parameters.
 
@@ -205,7 +205,7 @@ Enough to build genuinely useful workflows. Let me show you.
 
 ---
 
-## Slide 21: Live demo: WooCommerce MCP
+## Slide 21: Live demo: WooCommerce abilities
 
 _Run the four demo prompts live. Go slow. Let each result land before moving to the next._
 
@@ -220,7 +220,7 @@ What the room sees on screen: Claude calls `mcp-adapter-discover-abilities` once
 
 ## Slide 22: Section 5: Creating your own abilities
 
-WooCommerce's built-in abilities are just the start. Your plugin can join that conversation. Note that the example we'll show is WooCommerce-specific (registering in the WooCommerce category, using WooCommerce permissions), but the principle is exactly the same for any WordPress ability in any context.
+WooCommerce's built-in abilities are just the start. Your plugin can join that conversation. Note that the example we'll show is WooCommerce-specific (registering its own category, using WooCommerce permissions), but the principle is exactly the same for any WordPress ability in any context.
 
 ---
 
@@ -253,7 +253,7 @@ Walk through the anatomy slowly:
 
 The second argument to the filter is the ability ID string, not a `WP_Ability` object. Use `str_starts_with` to match the entire namespace. One filter, all your abilities.
 
-**Say this on stage:** as of WooCommerce 10.9, `woocommerce_mcp_include_ability` is deprecated. It only ever scoped the old WooCommerce-specific MCP bridge, and that bridge is now on its way out. WooCommerce abilities (yours included) are exposed through the standard WordPress MCP Adapter instead, the same one we just set up on slide 24 via `meta.public`. Set that flag on the ability and it's discovered automatically. No filter needed. The bridge itself is still shipped (WooCommerce 11.1 still has it) but marked for removal.
+**Say this on stage:** as of WooCommerce 10.9, `woocommerce_mcp_include_ability` is deprecated. It only ever scoped the old WooCommerce-specific MCP bridge, and that bridge is now on its way out. WooCommerce abilities (yours included) are exposed through the standard WordPress MCP Adapter instead, the Adapter from slide 17. Set `meta.public` on the ability, as on slide 24, and it's discovered automatically. No filter needed. The bridge itself is still shipped (WooCommerce 11.1 still has it) but marked for removal.
 
 I'm keeping this slide in the talk because it's still what you'll see in most existing tutorials and blog posts today, and it's a good illustration of how the filter pattern works, just flag it as legacy.
 
@@ -309,7 +309,7 @@ Now the turn: if this is the exact same job, same rules, every single morning, n
 
 ---
 
-## Slide 29: Section 7: What changes for you
+## Slide 29: Section 7: What this changes for you
 
 You've been writing hooks for years. This isn't a replacement. It's an upgrade.
 
@@ -317,7 +317,7 @@ You've been writing hooks for years. This isn't a replacement. It's an upgrade.
 
 ## Slide 30: Register once. Let everything in.
 
-Every ability you register today is automatically available to PHP, REST, WP-CLI, MCP, the Command Palette, and whatever surfaces come next. You don't rewire anything.
+Every ability you register today is automatically available to PHP, REST, WP-CLI, MCP, JavaScript, and whatever surfaces come next (the Command Palette and the Workflows API are on the way). You don't rewire anything.
 
 On the last bullet: this is a practical tip worth emphasising. If you have an ability that creates shipping labels for all processing orders, the ability itself should query the orders, apply the business logic, and return a clean result. Don't ask the agent to fetch orders first, then loop, then decide volumes. That's slower, more expensive in tokens, and you're trusting the model with logic that should live in your code.
 
