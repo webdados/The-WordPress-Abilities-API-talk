@@ -9,6 +9,22 @@ Markers used below:
 
 ---
 
+## Before the talk
+
+**A few days before:** create 4 or 5 new orders on the demo store, all "processing", dated October. One or two with a "Large Items" product, one of them with quantity 2, so the extra-volume rule visibly kicks in. Being in October, they also show up in slide 17's sales total.
+
+**The day before, and again that morning:**
+- `mcp_abilities_demo` shows as connected in `/mcp`. Changed anything? Restart Claude Code: a newly added server only loads at startup.
+- DPD Portugal licence active on the demo site. The plugin only registers its abilities while the licence is valid; expired means no DPD abilities and the demo fails quietly.
+- DPD credentials valid, and "next Friday" (October 30) accepted as a shipping date.
+- SMS credits available, and the demo customer's phone number is yours. Every order uses the same customer, so every SMS lands on that one phone.
+- A quick `orders-query` with status "processing" returns the new orders.
+- Terminal font big enough for the back row.
+- Phone hotspot ready in case the venue network fails.
+- A screen recording of a full rehearsal, as the fallback if nothing connects on the day.
+
+---
+
 ## Slide 1: Title
 
 _No notes needed. Let the slide land. Pause before speaking._
@@ -243,6 +259,8 @@ Then mark each of those orders as completed.
 Before running, one line: "Don't run this in production without testing first. And it eats tokens like a very capable intern paid per word they think."
 
 _Run it. Stay calm. Let it work._
+
+**Time budget:** about 3 minutes with 4 or 5 orders (roughly 25 to 30 tool calls). Hard stop at 5 minutes: if it's still going, "you get the idea", let it finish in the background, and move on.
 
 **While it runs:** every call shows up as `mcp-adapter-execute-ability`. Read out the ability names as they scroll past: `woocommerce/`, `woo-dpd-portugal/`, `webdados-toolbox/`. Three plugins, three authors, one prompt.
 
