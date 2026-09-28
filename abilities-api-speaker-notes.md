@@ -66,7 +66,16 @@ Hooks are powerful but dumb. They don't validate input. They don't document outp
 
 The validation chain is strict: input schema → permission callback → execute callback → output schema. One failure anywhere returns a clean `WP_Error`. Your callback never sees bad data, and never runs for the wrong user.
 
-**Skip if behind:** WordPress 7.1 added filters around each step: a short-circuit before execution, input normalisation, the permission result, custom input and output validation, and the final result. Plus a `wp_ability_invoked` action that fires on every call, handy for auditing.
+**Only if asked (hooks along the chain, in the order they fire):**
+1. `wp_ability_invoked` (action, 7.1): every call, before anything else. Good for auditing.
+2. `wp_pre_execute_ability` (filter, 7.1): return a value to skip everything else (cache, rate limit, maintenance mode).
+3. `wp_ability_normalize_input` (filter, 7.1): adjust the input before it's validated.
+4. `wp_ability_validate_input` (filter, 7.1): extra rules on top of the input schema.
+5. `wp_ability_permission_result` (filter, 7.1): add your own authorisation policy to the permission callback's answer.
+6. `wp_before_execute_ability` (action, 6.9): input valid, permission granted, callback about to run.
+7. `wp_ability_execute_result` (filter, 7.1): change or recover the callback's result.
+8. `wp_ability_validate_output` (filter, 7.1): extra rules on top of the output schema.
+9. `wp_after_execute_ability` (action, 6.9): after a successful run.
 
 ---
 
@@ -93,6 +102,19 @@ Four functions. That's all you need to get started. There are a few more (unregi
 The rest is JSON Schema, which you already know from the REST API. If you've written a REST endpoint, you know how to write an ability.
 
 _Footnote on the slide lists the other functions (unregister, has, the category getters). Don't mention it; it's there for anyone who wonders._
+
+**Only if asked (every function, one line each):**
+- `wp_register_ability_category( $slug, $args )`: registers a category (label, description). Call it on `wp_abilities_api_categories_init`.
+- `wp_register_ability( $name, $args )`: registers an ability with its schemas, callbacks and meta. Call it on `wp_abilities_api_init`.
+- `wp_get_abilities( $args )`: every registered ability. Since 7.1 it filters by `category`, `namespace` or `meta`.
+- `wp_get_ability( $name )`: one ability as a `WP_Ability` object, or `null`.
+- `$ability->execute( $input )`: runs the whole chain (input validation, permission, callback, output validation) and returns the result or a `WP_Error`.
+- `wp_has_ability( $name )`: whether an ability is registered.
+- `wp_unregister_ability( $name )`: removes an ability, e.g. to replace another plugin's with your own.
+- `wp_get_ability_category( $slug )` / `wp_get_ability_categories()`: one category, or all of them.
+- `wp_has_ability_category( $slug )` / `wp_unregister_ability_category( $slug )`: the category versions of has and unregister.
+
+**Only if asked (discovery hooks, 7.1):** `wp_get_abilities_item_include` decides per ability whether it makes the list; `wp_get_abilities_result` filters the final list.
 
 ---
 
@@ -206,6 +228,8 @@ WooCommerce's built-in abilities are just the start. Your plugin can join that c
 
 Register your category on `wp_abilities_api_categories_init`. This groups your abilities in the Abilities Explorer, the CLI output, and any UI that lists abilities by category.
 
+**Only if asked:** `wp_register_ability_category_args` (filter, 6.9) lets any plugin change a category's arguments as it's registered.
+
 ---
 
 ## Slide 24: Step 2: Register the ability
@@ -220,6 +244,8 @@ Walk through the anatomy slowly:
 
   And the same reminder as slide 15: `public` is exposure, not authorisation. The `permission_callback` is what protects it.
 - `meta.annotations`: for this ability, not readonly, not destructive, not idempotent (it creates something in the courier API)
+
+**Only if asked:** `wp_register_ability_args` (filter, 6.9) lets any plugin change an ability's arguments as it's registered, e.g. to set `meta.public` on an ability someone else wrote.
 
 ---
 

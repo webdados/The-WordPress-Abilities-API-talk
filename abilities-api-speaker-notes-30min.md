@@ -68,7 +68,16 @@ _The slide says it. Read the punchline, pause for the laugh, move on._
 
 Input schema, permission callback, execute callback, output schema. One failure anywhere returns a clean `WP_Error`. Your callback never sees bad data, and never runs for the wrong user.
 
-**Only if asked:** 7.1 added filters around each step (short-circuit, input normalisation, permission result, custom validation, result) and a `wp_ability_invoked` action for auditing.
+**Only if asked (hooks along the chain, in the order they fire):**
+1. `wp_ability_invoked` (action, 7.1): every call, before anything else. Good for auditing.
+2. `wp_pre_execute_ability` (filter, 7.1): return a value to skip everything else (cache, rate limit, maintenance mode).
+3. `wp_ability_normalize_input` (filter, 7.1): adjust the input before it's validated.
+4. `wp_ability_validate_input` (filter, 7.1): extra rules on top of the input schema.
+5. `wp_ability_permission_result` (filter, 7.1): add your own authorisation policy to the permission callback's answer.
+6. `wp_before_execute_ability` (action, 6.9): input valid, permission granted, callback about to run.
+7. `wp_ability_execute_result` (filter, 7.1): change or recover the callback's result.
+8. `wp_ability_validate_output` (filter, 7.1): extra rules on top of the output schema.
+9. `wp_after_execute_ability` (action, 6.9): after a successful run.
 
 ---
 
@@ -99,6 +108,19 @@ _Footnote on the slide lists the other functions (unregister, has, the category 
 **Skip if behind:**
 - WP-CLI has an `ability` command: `wp ability list`, `wp ability get`, `wp ability run`. It's built into the nightly (`wp cli update --nightly`); on stable 2.12 it's `wp package install wp-cli/ability-command`. It's how you test with your own input, no model in the loop. If it breaks there, it's your code, not the LLM getting creative with the parameters.
 - Supporting sites older than 6.9? Wrap your registration in `if ( function_exists( 'wp_register_ability' ) )`. One line.
+
+**Only if asked (every function, one line each):**
+- `wp_register_ability_category( $slug, $args )`: registers a category (label, description). Call it on `wp_abilities_api_categories_init`.
+- `wp_register_ability( $name, $args )`: registers an ability with its schemas, callbacks and meta. Call it on `wp_abilities_api_init`.
+- `wp_get_abilities( $args )`: every registered ability. Since 7.1 it filters by `category`, `namespace` or `meta`.
+- `wp_get_ability( $name )`: one ability as a `WP_Ability` object, or `null`.
+- `$ability->execute( $input )`: runs the whole chain (input validation, permission, callback, output validation) and returns the result or a `WP_Error`.
+- `wp_has_ability( $name )`: whether an ability is registered.
+- `wp_unregister_ability( $name )`: removes an ability, e.g. to replace another plugin's with your own.
+- `wp_get_ability_category( $slug )` / `wp_get_ability_categories()`: one category, or all of them.
+- `wp_has_ability_category( $slug )` / `wp_unregister_ability_category( $slug )`: the category versions of has and unregister.
+
+**Only if asked (discovery hooks, 7.1):** `wp_get_abilities_item_include` decides per ability whether it makes the list; `wp_get_abilities_result` filters the final list.
 
 ---
 
@@ -170,6 +192,8 @@ WooCommerce's abilities are just the start. Your plugin can join in. The example
 
 One call on `wp_abilities_api_categories_init`. It groups your abilities in the Explorer, the CLI, and any UI that lists them. Ten seconds, move on.
 
+**Only if asked:** `wp_register_ability_category_args` (filter, 6.9) lets any plugin change a category's arguments as it's registered.
+
 ---
 
 ## Slide 20: Step 2: Register the ability
@@ -185,6 +209,8 @@ Two things to say out loud:
 - `input_schema`: `order_id` required, `volumes` optional, defaults to 1.
 - `output_schema`: just `tracking_number` and `label_url`. No `success` flag, no `error_message`. Errors come back as `WP_Error`, which is the contract every consumer expects.
 - `annotations`: not readonly, not destructive, not idempotent. It creates something in the courier API.
+
+**Only if asked:** `wp_register_ability_args` (filter, 6.9) lets any plugin change an ability's arguments as it's registered, e.g. to set `meta.public` on an ability someone else wrote.
 
 ---
 
