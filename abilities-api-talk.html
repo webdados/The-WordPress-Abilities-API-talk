@@ -819,11 +819,11 @@
         <code style="font-family:'JetBrains Mono',monospace;font-size:13px;word-break:break-all;">wp plugin install https://github.com/WordPress/mcp-adapter/releases/latest/download/mcp-adapter.zip --activate</code>
       </div>
     </div>
-    <div class="code-block" style="font-size:16px;"><span style="color:var(--muted);">// No feature flag. No settings screen.</span>
-<span style="color:var(--muted);">// Activation alone creates a default</span>
-<span style="color:var(--muted);">// server that exposes public abilities</span>
-<span style="color:var(--muted);">// through three tools: discover,</span>
-<span style="color:var(--muted);">// inspect, execute.</span>
+    <div class="code-block" style="font-size:16px;"><span class="c">// No feature flag. No settings screen.</span>
+<span class="c">// Activation alone creates a default</span>
+<span class="c">// server that exposes public abilities</span>
+<span class="c">// through three tools: discover,</span>
+<span class="c">// inspect, execute.</span>
 
 HTTP: <span class="s">/wp-json/mcp/mcp-adapter-default-server</span>
 STDIO: <span class="s">wp mcp-adapter serve</span></div>
@@ -942,7 +942,7 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
   <div class="code-block small" style="flex:1;"><span class="f">add_action</span>(
   <span class="s">'wp_abilities_api_init'</span>,
   <span class="k">function</span>() {
-    <span class="f">wp_register_ability</span>( <span class="s">'woo-dpd-portugal/create-label'</span>, [
+    <span class="f">wp_register_ability</span>( <span class="s">'woo-dpd-portugal/create-shipping-label'</span>, [
       <span class="s">'label'</span>            => <span class="f">__</span>( <span class="s">'Create Shipping Label'</span>, <span class="s">'woo-dpd-portugal'</span> ),
       <span class="s">'description'</span>      => <span class="f">__</span>( <span class="s">'Creates a DPD shipping label for a given order.'</span>, <span class="s">'woo-dpd-portugal'</span> ),
       <span class="s">'category'</span>         => <span class="s">'woo-dpd-portugal'</span>,
