@@ -84,7 +84,7 @@ Spend a moment on the bottom row. "Works with AI agents?" is the new one. That's
 
 ## Slide 11: Section 3: How to use it
 
-Four functions. That's the whole API surface you need to learn.
+Four functions. That's all you need to get started. There are a few more (unregister, has, and the category equivalents), but these four are what you'll use.
 
 ---
 

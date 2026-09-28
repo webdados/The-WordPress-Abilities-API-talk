@@ -86,7 +86,7 @@ Point at the bottom row. "Works with AI agents?" is the one hooks can't do: they
 
 ## Slide 11: Section 3: How to use it
 
-Four functions. That's the whole API surface.
+Four functions. That's all you need to get started.
 
 ---
 
