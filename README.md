@@ -23,7 +23,7 @@ The live demo uses [DPD Portugal for WooCommerce](https://nakedcatplugins.com/sh
 | Version | Length | Slides | Deck | Speaker notes |
 |---|---|---|---|---|
 | Full talk | 60 minutes | 32 | [Open the 60-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk.html) | [`abilities-api-speaker-notes.md`](abilities-api-speaker-notes.md) |
-| Short talk | 30 minutes (including Q&A) | 27 | [Open the 30-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk-30min.html) | [`abilities-api-speaker-notes-30min.md`](abilities-api-speaker-notes-30min.md) |
+| Short talk | 30 minutes | 27 | [Open the 30-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk-30min.html) | [`abilities-api-speaker-notes-30min.md`](abilities-api-speaker-notes-30min.md) |
 
 Both cover the same ideas and share the same facts. The 30-minute version is tighter:
 
