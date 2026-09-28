@@ -706,28 +706,21 @@
   <div class="slide-num">3 / How to use</div>
   <h2 class="slide-heading">The functions</h2>
   <p class="slide-subheading">Register · Discover · Execute</p>
-  <div class="code-block large" style="flex:1;">
-<span class="c">// Step 1: Register your category</span>
-<span class="c">// Hook: wp_abilities_api_categories_init</span>
+  <div class="code-block large" style="font-size:17px;padding:16px 28px;overflow:visible;"><span class="c">// Step 1: Register your category (hook: wp_abilities_api_categories_init)</span>
 <span class="f">wp_register_ability_category</span>()
 
-<span class="c">// Step 2: Register your ability</span>
-<span class="c">// Hook: wp_abilities_api_init</span>
+<span class="c">// Step 2: Register your ability (hook: wp_abilities_api_init)</span>
 <span class="f">wp_register_ability</span>()
 
 <span class="c">// Step 3: Discover what's registered</span>
 <span class="f">wp_get_abilities</span>()
-<span class="f">wp_get_ability</span>( <span class="s">'namespace/name'</span> )
 
 <span class="c">// Step 4: Execute from PHP</span>
 <span class="n">$ability</span> = <span class="f">wp_get_ability</span>( <span class="s">'namespace/name'</span> );
 <span class="n">$result</span>  = <span class="n">$ability</span>-><span class="f">execute</span>( [ <span class="s">'order_id'</span> => <span class="n">42</span> ] );
-<span class="k">if</span> ( <span class="f">is_wp_error</span>( <span class="n">$result</span> ) ) {
-    <span class="c">// handle error: $result->get_error_message()</span>
-} <span class="k">else</span> {
-    <span class="c">// use result: $result['tracking_number']</span>
-}
-  </div>
+<span class="k">if</span> ( <span class="f">is_wp_error</span>( <span class="n">$result</span> ) ) { <span class="c">/* $result->get_error_message() */</span> }
+<span class="k">else</span> { <span class="c">/* use $result['tracking_number'] */</span> }</div>
+  <div style="margin-top:10px;font-size:15px;color:var(--muted);">Also available: <code style="font-family:'JetBrains Mono',monospace;font-size:14px;">wp_unregister_ability()</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:14px;">wp_has_ability()</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:14px;">wp_get_ability_category()</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:14px;">wp_get_ability_categories()</code> · and a few more</div>
 </div>
 
 <!-- SLIDE 13: Core abilities -->

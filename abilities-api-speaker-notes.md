@@ -92,6 +92,8 @@ Four functions. That's all you need to get started. There are a few more (unregi
 
 The rest is JSON Schema, which you already know from the REST API. If you've written a REST endpoint, you know how to write an ability.
 
+_Footnote on the slide lists the other functions (unregister, has, the category getters). Don't mention it; it's there for anyone who wonders._
+
 ---
 
 ## Slide 13: WP-CLI

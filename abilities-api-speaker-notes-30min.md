@@ -94,6 +94,8 @@ Four functions. That's all you need to get started.
 
 Register a category, register an ability, discover, execute. The rest is JSON Schema, which you already know from the REST API. If you've written a REST endpoint, you can write an ability.
 
+_Footnote on the slide lists the other functions (unregister, has, the category getters). Don't mention it; it's there for anyone who wonders._
+
 **Skip if behind:**
 - WP-CLI has an `ability` command: `wp ability list`, `wp ability get`, `wp ability run`. It's built into the nightly (`wp cli update --nightly`); on stable 2.12 it's `wp package install wp-cli/ability-command`. It's how you test with your own input, no model in the loop. If it breaks there, it's your code, not the LLM getting creative with the parameters.
 - Supporting sites older than 6.9? Wrap your registration in `if ( function_exists( 'wp_register_ability' ) )`. One line.
