@@ -776,16 +776,14 @@
       <li><div style="font-size:18px;line-height:1.5;"><strong>Create an Application Password</strong><br>Users → Your Profile → Application Passwords, for a user who can do the job (e.g. a Shop Manager). It's shown once.</div></li>
       <li><div style="font-size:18px;line-height:1.5;"><strong>Add it to Claude Code</strong> →</div></li>
     </ol>
-    <div class="code-block" style="font-size:14px;">
-<span class="bash-comment"># Base64-encode "username:application-password" first</span>
+    <div class="code-block" style="font-size:14px;"><span class="bash-comment"># Base64-encode "username:application-password" first</span>
 <span class="bash-prompt">$</span> <span class="bash-cmd">echo -n</span> <span class="bash-str">"marco:xxxx xxxx xxxx xxxx xxxx xxxx"</span> | <span class="bash-cmd">base64</span>
 
 <span class="bash-prompt">$</span> <span class="bash-cmd">claude mcp add</span> <span class="bash-flag">--transport http</span> <span class="bash-arg">wordpress</span> \
     <span class="bash-str">https://yourstore.com/wp-json/mcp/mcp-adapter-default-server</span> \
     <span class="bash-flag">--header</span> <span class="bash-str">"Authorization: Basic &lt;base64-string&gt;"</span>
 
-<span class="bash-comment"># No proxy, no Node: Claude Code talks HTTP straight to the adapter</span>
-    </div>
+<span class="bash-comment"># No proxy, no Node: Claude Code talks HTTP straight to the adapter</span></div>
   </div>
 </div>
 
@@ -857,8 +855,7 @@
       ),
     ] );
   }
-);
-    </div>
+);</div>
 </div>
 
 <!-- SLIDE 20: wp_register_ability full example -->
@@ -866,8 +863,7 @@
   <div class="slide-num">5 / Creating abilities</div>
   <h2 class="slide-heading">Step 2: Register the ability</h2>
   <p class="slide-subheading">Hook: <code style="font-family:'JetBrains Mono',monospace;color:var(--purple);font-size:22px;">wp_abilities_api_init</code></p>
-  <div class="code-block small" style="flex:1;">
-<span class="f">add_action</span>(
+  <div class="code-block small" style="flex:1;"><span class="f">add_action</span>(
   <span class="s">'wp_abilities_api_init'</span>,
   <span class="k">function</span>() {
     <span class="f">wp_register_ability</span>( <span class="s">'woo-dpd-portugal/create-label'</span>, [
@@ -902,8 +898,7 @@
       ],
     ] );
   }
-);
-  </div>
+);</div>
 </div>
 
 <!-- SLIDE 21: Section 6 intro -->
