@@ -3,7 +3,7 @@
 
 **Talk by [Marco Almeida](https://webdados.pt) ([@marcoalmeidapt](https://x.com/marcoalmeidapt))**  
 - WordPress Lisboa Meetup · June 11, 2026 (see version 1.1)
-- WordPress Faro Meetup · September 3, 2026 (see version 2.0)
+- WordPress Faro Meetup · September 3, 2026 (see version 2.0) · [Watch the recording on WordPress.tv](https://wordpress.tv/2026/09/28/the-wp-abilities-api-and-how-to-interact-with-woocommerce-using-human-language/)
 - WordPress Day for AI 2026 · Faro · October 24, 2026 (30-minute version, see version 3.0)
 
 ---
@@ -106,7 +106,7 @@ Open either deck in any browser: [60-minute version](https://webdados.github.io/
 - Consumers table: MCP marked as a plugin, A2A, WebMCP and UTCP as "Exploring"
 - The 60-minute title slide no longer names a specific event
 
-**v2.0**, WordPress Faro Meetup, September 3, 2026
+**v2.0**, WordPress Faro Meetup, September 3, 2026 ([recording](https://wordpress.tv/2026/09/28/the-wp-abilities-api-and-how-to-interact-with-woocommerce-using-human-language/))
 - Section 4 rebuilt around the **WordPress MCP Adapter**, replacing the deprecated WooCommerce-specific MCP beta (feature flag, `/wp-json/woocommerce/mcp`, API-key auth, local proxy)
 - New setup: install the MCP Adapter plugin from GitHub, connect Claude Code directly over HTTP with `claude mcp add --transport http`, authenticated via WordPress Application Passwords
 - Updated ability list to the 7 canonical `woocommerce/*` domain abilities shipped in WC 10.9 (previously 9, under the old REST-bridge beta)
