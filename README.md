@@ -1,7 +1,8 @@
 # The WordPress Abilities API
 ## And how to interact with WooCommerce using human language
 
-**Talk by [Marco Almeida](https://webdados.pt) ([@marcoalmeidapt](https://x.com/marcoalmeidapt))**  
+**Talk by [Marco Almeida](https://marcoalmeida.pt/) ([Webdados](https://webdados.pt), [Naked Cat Plugins](https://nakedcatplugins.com))**  
+[X: @marcoalmeidapt](https://x.com/marcoalmeidapt) · [WordPress.org: @webdados](https://profiles.wordpress.org/webdados/)  
 - WordPress Lisboa Meetup · June 11, 2026 (see version 1.1)
 - WordPress Faro Meetup · September 3, 2026 (see version 2.0) · [Watch the recording on WordPress.tv](https://wordpress.tv/2026/09/28/the-wp-abilities-api-and-how-to-interact-with-woocommerce-using-human-language/)
 - WordPress Day for AI 2026 · Faro · October 24, 2026 (30-minute version, see version 3.0)
