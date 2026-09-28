@@ -172,13 +172,15 @@ Seven abilities out of the box. Orders: query, add a note, update status. Produc
 
 _One prompt, live. Keep it under 90 seconds._
 
-"What were my total sales in the last 7 days, broken down by day?"
+"What were my total sales in the last year, broken down by month?"
 
 While it runs: the tool on screen is `mcp-adapter-execute-ability`; point at its ability name parameter, `woocommerce/orders-query`. A real ability with a real schema, nothing written for this demo.
 
-When the answer lands, gesture at the other prompts on screen: "Stock checks, order lists, updates, all the same way. You'll see much more later." Move on.
+When the answer lands, point at two things: Claude decided what counts as a sale (the cancelled order is left out), and Claude did the adding up. "It guessed what 'sales' means and did the maths itself. Hold that thought." It pays off on slide 25.
 
-**Check before the day:** whether the total counts processing orders or only completed ones. If someone asks, know the answer.
+Then gesture at the other prompts on screen: "Stock checks, order lists, updates, all the same way. You'll see much more later." Move on.
+
+**Rehearsed on Sept 28, 2026:** one call, 14 orders, €1,770 (June €930, September €840), one cancelled order excluded. On the day there will also be the October orders staged for the second demo, still processing, so October shows up too. Watch whether Claude counts processing orders as sales, and say which way it went: that's the judgment call worth pointing at.
 
 ---
 
@@ -270,7 +272,7 @@ You've been writing hooks for years. This isn't a replacement. It's an upgrade.
 
 One registration, every surface: PHP, REST, WP-CLI, MCP, the Command Palette, and whatever comes next.
 
-Last bullet: already made on slide 23. Point at it, five seconds.
+Last bullet: already made on slide 23, and it's the payoff for slide 17's sales total, where the agent guessed what counts and did the maths. Point at it, five seconds.
 
 The yellow box is the proof: WooCommerce deprecated its own MCP bridge and moved to the shared Adapter (the old bridge is still shipped, marked for removal). Nobody's abilities had to change, only the transport. That happened between writing this talk and giving it.
 
