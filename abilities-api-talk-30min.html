@@ -581,7 +581,8 @@
         <tr><td><strong>WP 6.8</strong></td><td>Composer package &amp; feature plugin</td></tr>
         <tr><td><strong>WP 6.9</strong></td><td>Merged into core · Three read-only core abilities shipped</td></tr>
         <tr><td><strong>WP 7.0</strong></td><td>JavaScript client (<code style="font-size:16px;background:#f0f0f0;padding:1px 6px;border-radius:3px;">@wordpress/abilities</code>) · Hybrid abilities · WP AI Client</td></tr>
-        <tr><td style="color:var(--muted);font-size:17px;">Abilities Explorer</td><td style="font-size:17px;color:var(--muted);">Admin screen for browsing &amp; testing abilities, available via the <strong style="color:var(--dark);">AI Experiments plugin</strong>, not core</td></tr>
+        <tr><td><strong>WP 7.1</strong></td><td>Unified <code style="font-size:16px;background:#f0f0f0;padding:1px 6px;border-radius:3px;">meta.public</code> flag · Lifecycle filters · <code style="font-size:16px;background:#f0f0f0;padding:1px 6px;border-radius:3px;">wp_get_abilities()</code> filtering</td></tr>
+        <tr><td style="color:var(--muted);font-size:17px;">Abilities Explorer</td><td style="font-size:17px;color:var(--muted);">Admin screen for browsing &amp; testing abilities, available via the <strong style="color:var(--dark);">AI plugin</strong>, not core</td></tr>
       </tbody>
     </table>
   </div>
@@ -599,11 +600,11 @@
         <tr><td>PHP (direct)</td><td><span class="tag-since">WP 6.9</span></td></tr>
         <tr><td>REST API</td><td><span class="tag-since">WP 6.9</span></td></tr>
         <tr><td>WP-CLI <code style="font-size:16px;background:#f0f0f0;padding:2px 6px;border-radius:4px;">wp ability</code> (separate package)</td><td><span class="tag-since">WP 6.9+</span></td></tr>
-        <tr><td>MCP (via WordPress MCP Adapter)</td><td><span class="tag-since">WP 7.0</span></td></tr>
+        <tr><td>MCP (via the MCP Adapter plugin)</td><td><span class="tag-since">Plugin</span></td></tr>
         <tr><td>JavaScript client</td><td><span class="tag-since">WP 7.0</span></td></tr>
         <tr><td>Command Palette</td><td><span class="tag-coming">Coming</span></td></tr>
         <tr><td>Workflows API</td><td><span class="tag-coming">Coming</span></td></tr>
-        <tr><td>A2A · WebMCP · UTCP</td><td><span class="tag-coming">Coming</span></td></tr>
+        <tr><td>A2A · WebMCP · UTCP</td><td><span class="tag-coming">Exploring</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -740,17 +741,17 @@
       <tbody>
         <tr>
           <td><code style="font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--purple);">core/get-site-info</code></td>
-          <td>Site name, URL, description, language, timezone, date/time formats</td>
+          <td>Site name, description, URL, admin email, language, WordPress version</td>
           <td><span class="pill pill-blue">site</span></td>
         </tr>
         <tr>
           <td><code style="font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--purple);">core/get-user-info</code></td>
-          <td>Current user's basic profile: login, display name, email, roles</td>
+          <td>Current user: ID, display name, login, roles, locale <span style="color:var(--muted);">(7.1 adds name, bio, URL)</span></td>
           <td><span class="pill pill-blue">user</span></td>
         </tr>
         <tr>
           <td><code style="font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--purple);">core/get-environment-info</code></td>
-          <td>WordPress version, PHP version, active theme, is multisite</td>
+          <td>Environment type, PHP version, database server, WordPress version</td>
           <td><span class="pill pill-blue">site</span></td>
         </tr>
       </tbody>
@@ -759,7 +760,7 @@
       The goal was to lay the foundation, not ship everything at once. Core keeps the ability count small and deliberate; plugins and WooCommerce fill the gaps.
     </div>
     <div class="highlight-box warn" style="font-size:16px;color:#5a4000;">
-      <strong>Available via PHP and WP-CLI, not MCP, by default.</strong> None of these three ship with <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">meta.mcp.public</code> set to <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">true</code>. That's deliberate: registered abilities aren't exposed to MCP by default, so agents can't touch anything until a site owner explicitly opts it in, even read-only core abilities. Flip it with a <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">wp_register_ability_args</code> filter if you want Claude to see them.
+      <strong>Public since 7.1.</strong> All three set <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">meta.public</code> to <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">true</code>, so REST and the MCP Adapter expose them. Exposure isn't authorisation: the permission callback still decides who can run them.
     </div>
   </div>
 </div>
@@ -778,8 +779,8 @@
   <p class="slide-subheading">Install. Authenticate. One command.</p>
   <div class="two-col" style="flex:1;align-items:center;grid-template-columns:1fr 1.25fr;gap:36px;">
     <ol class="step-list" style="margin:0;padding:0;">
-      <li><div style="font-size:18px;line-height:1.5;"><strong>Install the MCP Adapter</strong><br>github.com/WordPress/mcp-adapter → Releases → upload &amp; activate <span style="color:var(--muted);">(or <code style="font-family:'JetBrains Mono',monospace;font-size:14px;">composer require wordpress/mcp-adapter</code>)</span>. No feature flag, no settings screen.</div></li>
-      <li><div style="font-size:18px;line-height:1.5;"><strong>Create an Application Password</strong><br>Users → Your Profile → Application Passwords, for a user who can do the job (e.g. <code style="font-family:'JetBrains Mono',monospace;font-size:14px;">manage_woocommerce</code>). It's shown once.</div></li>
+      <li><div style="font-size:18px;line-height:1.5;"><strong>Install the MCP Adapter</strong><br>github.com/WordPress/mcp-adapter → Releases → upload &amp; activate. No feature flag, no settings screen. Public abilities are exposed through three tools: discover, inspect, execute.<br><code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);word-break:break-all;">or: wp plugin install https://github.com/WordPress/mcp-adapter/releases/latest/download/mcp-adapter.zip --activate</code></div></li>
+      <li><div style="font-size:18px;line-height:1.5;"><strong>Create an Application Password</strong><br>Users → Your Profile → Application Passwords, for a user who can do the job (e.g. a Shop Manager). It's shown once.</div></li>
       <li><div style="font-size:18px;line-height:1.5;"><strong>Add it to Claude Code</strong> →</div></li>
     </ol>
     <div class="code-block" style="font-size:14px;">
@@ -899,10 +900,7 @@
       <span class="s">'execute_callback'</span>    => <span class="s">'dpd_create_label'</span>,
       <span class="s">'permission_callback'</span> => <span class="k">fn</span>() => <span class="f">current_user_can</span>( <span class="s">'manage_woocommerce'</span> ),
       <span class="s">'meta'</span> => [
-        <span class="s">'mcp'</span> => [
-          <span class="s">'public'</span> => <span class="k">true</span>,
-          <span class="s">'type'</span>   => <span class="s">'tool'</span>,
-        ],
+        <span class="s">'public'</span>      => <span class="k">true</span>, <span class="c">// WP 7.1+: REST, MCP, whatever comes next</span>
         <span class="s">'annotations'</span> => [
           <span class="s">'readonly'</span>    => <span class="k">false</span>,
           <span class="s">'destructive'</span> => <span class="k">false</span>,
@@ -987,7 +985,7 @@
 <div class="slide" id="s25">
   <div class="slide-num">7 / What changes</div>
   <h2 class="slide-heading">Register once. Let everything in.</h2>
-  <p class="slide-subheading">PHP · REST · WP-CLI · MCP · Command Palette · whatever comes next</p>
+  <p class="slide-subheading">PHP · REST · WP-CLI · MCP · JavaScript · whatever comes next</p>
   <div class="body" style="margin-top:20px;">
     <ul>
       <li>You don't rewire anything. One registration. Every surface.</li>
@@ -1012,6 +1010,8 @@
         <li><a href="https://developer.wordpress.org/apis/abilities-api/">developer.wordpress.org/apis/abilities-api/</a></li>
         <li><a href="https://make.wordpress.org/core/2025/11/10/abilities-api-in-wordpress-6-9/">make.wordpress.org: Abilities API in WP 6.9</a></li>
         <li><a href="https://make.wordpress.org/core/2026/03/24/client-side-abilities-api-in-wordpress-7-0/">make.wordpress.org: Client-side Abilities API WP 7.0</a></li>
+        <li><a href="https://make.wordpress.org/core/2026/08/04/a-unified-public-exposure-flag-for-abilities-in-wordpress-7-1/">make.wordpress.org: Unified public flag in WP 7.1</a></li>
+        <li><a href="https://make.wordpress.org/core/2026/07/31/abilities-api-improvements-in-wordpress-7-1/">make.wordpress.org: Abilities API improvements in WP 7.1</a></li>
         <li><a href="https://developer.wordpress.org/news/2026/02/from-abilities-to-ai-agents-introducing-the-wordpress-mcp-adapter/">WordPress MCP Adapter intro</a></li>
         <li><a href="https://github.com/WordPress/mcp-adapter">github.com/WordPress/mcp-adapter</a></li>
         <li><a href="https://developer.wordpress.org/cli/commands/ability/">WP-CLI ability command docs</a></li>

@@ -506,7 +506,7 @@
   <h1>The WordPress<br>Abilities API</h1>
   <p class="subtitle">And how to interact with WooCommerce<br>using human language.</p>
   <div class="meta">
-    <strong>Marco Almeida</strong> &nbsp;·&nbsp; WordPress Faro Meetup &nbsp;·&nbsp; September 3, 2026
+    <strong>Marco Almeida</strong> &nbsp;·&nbsp; Webdados / Naked Cat Plugins
   </div>
 </div>
 
@@ -581,7 +581,8 @@
         <tr><td><strong>WP 6.8</strong></td><td>Composer package &amp; feature plugin</td></tr>
         <tr><td><strong>WP 6.9</strong></td><td>Merged into core · Three read-only core abilities shipped</td></tr>
         <tr><td><strong>WP 7.0</strong></td><td>JavaScript client (<code style="font-size:16px;background:#f0f0f0;padding:1px 6px;border-radius:3px;">@wordpress/abilities</code>) · Hybrid abilities · WP AI Client</td></tr>
-        <tr><td style="color:var(--muted);font-size:17px;">Abilities Explorer</td><td style="font-size:17px;color:var(--muted);">Admin screen for browsing &amp; testing abilities, available via the <strong style="color:var(--dark);">AI Experiments plugin</strong>, not core</td></tr>
+        <tr><td><strong>WP 7.1</strong></td><td>Unified <code style="font-size:16px;background:#f0f0f0;padding:1px 6px;border-radius:3px;">meta.public</code> flag · Lifecycle filters · <code style="font-size:16px;background:#f0f0f0;padding:1px 6px;border-radius:3px;">wp_get_abilities()</code> filtering</td></tr>
+        <tr><td style="color:var(--muted);font-size:17px;">Abilities Explorer</td><td style="font-size:17px;color:var(--muted);">Admin screen for browsing &amp; testing abilities, available via the <strong style="color:var(--dark);">AI plugin</strong>, not core</td></tr>
       </tbody>
     </table>
   </div>
@@ -599,11 +600,11 @@
         <tr><td>PHP (direct)</td><td><span class="tag-since">WP 6.9</span></td></tr>
         <tr><td>REST API</td><td><span class="tag-since">WP 6.9</span></td></tr>
         <tr><td>WP-CLI <code style="font-size:16px;background:#f0f0f0;padding:2px 6px;border-radius:4px;">wp ability</code> (separate package)</td><td><span class="tag-since">WP 6.9+</span></td></tr>
-        <tr><td>MCP (via WordPress MCP Adapter)</td><td><span class="tag-since">WP 7.0</span></td></tr>
+        <tr><td>MCP (via the MCP Adapter plugin)</td><td><span class="tag-since">Plugin</span></td></tr>
         <tr><td>JavaScript client</td><td><span class="tag-since">WP 7.0</span></td></tr>
         <tr><td>Command Palette</td><td><span class="tag-coming">Coming</span></td></tr>
         <tr><td>Workflows API</td><td><span class="tag-coming">Coming</span></td></tr>
-        <tr><td>A2A · WebMCP · UTCP</td><td><span class="tag-coming">Coming</span></td></tr>
+        <tr><td>A2A · WebMCP · UTCP</td><td><span class="tag-coming">Exploring</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -781,27 +782,27 @@
       <tbody>
         <tr>
           <td><code style="font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--purple);">core/get-site-info</code></td>
-          <td>Site name, URL, description, language, timezone, date/time formats</td>
+          <td>Site name, description, URL, admin email, language, WordPress version</td>
           <td><span class="pill pill-blue">site</span></td>
         </tr>
         <tr>
           <td><code style="font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--purple);">core/get-user-info</code></td>
-          <td>Current user's basic profile: login, display name, email, roles</td>
+          <td>Current user: ID, display name, login, roles, locale <span style="color:var(--muted);">(7.1 adds name, bio, URL)</span></td>
           <td><span class="pill pill-blue">user</span></td>
         </tr>
         <tr>
           <td><code style="font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--purple);">core/get-environment-info</code></td>
-          <td>WordPress version, PHP version, active theme, is multisite</td>
+          <td>Environment type, PHP version, database server, WordPress version</td>
           <td><span class="pill pill-blue">site</span></td>
         </tr>
       </tbody>
     </table>
     <div class="highlight-box" style="font-size:17px;">
       The goal was to lay the foundation, not ship everything at once. Core keeps the ability count small and deliberate; plugins and WooCommerce fill the gaps.<br>
-      <span style="font-size:15px;color:var(--muted);margin-top:6px;display:block;">Coming in 7.1+: <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/get-active-theme</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/list-plugins</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/get-site-health</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/get-settings</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/update-settings</code></span>
+      <span style="font-size:15px;color:var(--muted);margin-top:6px;display:block;">Proposed, not in core yet: <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/read-settings</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/read-content</code> · <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">core/read-users</code></span>
     </div>
     <div class="highlight-box warn" style="font-size:16px;color:#5a4000;">
-      <strong>Available via PHP and WP-CLI, not MCP, by default.</strong> None of these three ship with <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">meta.mcp.public</code> set to <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">true</code>. That's deliberate: registered abilities aren't exposed to MCP by default, so agents can't touch anything until a site owner explicitly opts it in, even read-only core abilities. Flip it with a <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">wp_register_ability_args</code> filter if you want Claude to see them.
+      <strong>Public since 7.1.</strong> All three set <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">meta.public</code> to <code style="font-family:'JetBrains Mono',monospace;font-size:13px;">true</code>, so REST and the MCP Adapter expose them. Exposure isn't authorisation: the permission callback still decides who can run them.
     </div>
   </div>
 </div>
@@ -825,15 +826,16 @@
         github.com/WordPress/mcp-adapter → Releases → download the plugin zip → Plugins → Add New → Upload → Activate
       </div>
       <div class="highlight-box" style="font-size:18px;">
-        <strong>Composer:</strong><br>
-        <code style="font-family:'JetBrains Mono',monospace;font-size:14px;">composer require wordpress/mcp-adapter</code>
+        <strong>Or with WP-CLI:</strong><br>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:13px;word-break:break-all;">wp plugin install https://github.com/WordPress/mcp-adapter/releases/latest/download/mcp-adapter.zip --activate</code>
       </div>
     </div>
     <div class="code-block" style="font-size:16px;">
       <span style="color:var(--muted);">// No feature flag. No settings screen.</span><br>
       <span style="color:var(--muted);">// Activation alone creates a default</span><br>
-      <span style="color:var(--muted);">// server that exposes every</span><br>
-      <span style="color:var(--muted);">// public ability automatically.</span><br><br>
+      <span style="color:var(--muted);">// server that exposes public abilities</span><br>
+      <span style="color:var(--muted);">// through three tools: discover,</span><br>
+      <span style="color:var(--muted);">// inspect, execute.</span><br><br>
       HTTP: <span class="s">/wp-json/mcp/mcp-adapter-default-server</span><br>
       STDIO: <span class="s">wp mcp-adapter serve</span>
     </div>
@@ -848,7 +850,7 @@
   <div class="body" style="margin-bottom:24px;">
     <ul>
       <li>No Node.js, no proxy, no <code style="font-family:'JetBrains Mono',monospace;font-size:15px;">npx</code>: Claude Code speaks HTTP to the adapter directly</li>
-      <li>A WordPress user with the right capability for the abilities you'll call (e.g. <code style="font-family:'JetBrains Mono',monospace;font-size:15px;">manage_woocommerce</code>)</li>
+      <li>A WordPress user with the right capabilities for the abilities you'll call (e.g. a Shop Manager for WooCommerce)</li>
       <li>An <strong>Application Password</strong> for that account</li>
     </ul>
   </div>
@@ -979,10 +981,7 @@
       <span class="s">'execute_callback'</span>    => <span class="s">'dpd_create_label'</span>,
       <span class="s">'permission_callback'</span> => <span class="k">fn</span>() => <span class="f">current_user_can</span>( <span class="s">'manage_woocommerce'</span> ),
       <span class="s">'meta'</span> => [
-        <span class="s">'mcp'</span> => [
-          <span class="s">'public'</span> => <span class="k">true</span>,
-          <span class="s">'type'</span>   => <span class="s">'tool'</span>,
-        ],
+        <span class="s">'public'</span>      => <span class="k">true</span>, <span class="c">// WP 7.1+: REST, MCP, whatever comes next</span>
         <span class="s">'annotations'</span> => [
           <span class="s">'readonly'</span>    => <span class="k">false</span>,
           <span class="s">'destructive'</span> => <span class="k">false</span>,
@@ -1014,7 +1013,7 @@
 );
   </div>
   <div class="highlight-box warn" style="margin-top:20px;font-size:16px;color:#5a4000;">
-    <strong>Deprecated as of WooCommerce 10.9:</strong> this filter only scopes the old WooCommerce-specific MCP bridge. WooCommerce now exposes abilities through the standard WordPress MCP Adapter instead, set <code style="font-family:'JetBrains Mono',monospace;">meta.mcp.public</code> on the ability itself and it's discovered automatically, no filter needed.
+    <strong>Deprecated as of WooCommerce 10.9:</strong> this filter only scopes the old WooCommerce-specific MCP bridge. WooCommerce now exposes abilities through the standard WordPress MCP Adapter instead, set <code style="font-family:'JetBrains Mono',monospace;">meta.public</code> (WP 7.1+) on the ability itself and it's discovered automatically, no filter needed.
   </div>
 </div>
 
@@ -1090,7 +1089,7 @@
 <div class="slide" id="s30">
   <div class="slide-num">7 / What changes</div>
   <h2 class="slide-heading">Register once. Let everything in.</h2>
-  <p class="slide-subheading">PHP · REST · WP-CLI · MCP · Command Palette · whatever comes next</p>
+  <p class="slide-subheading">PHP · REST · WP-CLI · MCP · JavaScript · whatever comes next</p>
   <div class="body" style="margin-top:20px;">
     <ul>
       <li>You don't rewire anything. One registration. Every surface.</li>
@@ -1100,7 +1099,7 @@
     </ul>
   </div>
   <div class="highlight-box warn" style="margin-top:28px;font-size:17px;color:#5a4000;">
-    <strong>Note:</strong> This is exactly why "register once" matters in practice. When WooCommerce deprecated its own MCP bridge in favor of the shared WordPress MCP Adapter, none of the abilities anyone had registered needed to change, only the transport in front of them did. Earlier versions of this setup (WC 10.3–10.8) used a WooCommerce-specific MCP beta with its own endpoint and feature flag. That's gone now; the Adapter shown in Section 4 is the way in.
+    <strong>Note:</strong> This is exactly why "register once" matters in practice. When WooCommerce deprecated its own MCP bridge in favor of the shared WordPress MCP Adapter, none of the abilities anyone had registered needed to change, only the transport in front of them did. Earlier versions of this setup (WC 10.3 to 10.8) used a WooCommerce-specific MCP beta with its own endpoint and feature flag. It's deprecated and on its way out; the Adapter shown in Section 4 is the way in.
   </div>
 </div>
 
@@ -1115,6 +1114,8 @@
         <li><a href="https://developer.wordpress.org/apis/abilities-api/">developer.wordpress.org/apis/abilities-api/</a></li>
         <li><a href="https://make.wordpress.org/core/2025/11/10/abilities-api-in-wordpress-6-9/">make.wordpress.org: Abilities API in WP 6.9</a></li>
         <li><a href="https://make.wordpress.org/core/2026/03/24/client-side-abilities-api-in-wordpress-7-0/">make.wordpress.org: Client-side Abilities API WP 7.0</a></li>
+        <li><a href="https://make.wordpress.org/core/2026/08/04/a-unified-public-exposure-flag-for-abilities-in-wordpress-7-1/">make.wordpress.org: Unified public flag in WP 7.1</a></li>
+        <li><a href="https://make.wordpress.org/core/2026/07/31/abilities-api-improvements-in-wordpress-7-1/">make.wordpress.org: Abilities API improvements in WP 7.1</a></li>
         <li><a href="https://developer.wordpress.org/news/2026/02/from-abilities-to-ai-agents-introducing-the-wordpress-mcp-adapter/">WordPress MCP Adapter intro</a></li>
         <li><a href="https://github.com/WordPress/mcp-adapter">github.com/WordPress/mcp-adapter</a></li>
         <li><a href="https://developer.wordpress.org/cli/commands/ability/">WP-CLI ability command docs</a></li>

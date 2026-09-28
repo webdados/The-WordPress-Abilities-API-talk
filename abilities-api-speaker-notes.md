@@ -1,5 +1,5 @@
 # Speaker Notes: WordPress Abilities API
-## Marco Almeida · WordPress Faro Meetup · September 2026
+## Marco Almeida · Webdados / Naked Cat Plugins
 
 ---
 
@@ -25,9 +25,9 @@ Right now, probably not.
 
 ## Slide 4: Timeline
 
-The Abilities API started as a Composer package you had to install manually. In WordPress 6.9 it landed in core (no plugin, no Composer entry needed) and shipped the first three core abilities. WordPress 7.0 added the JavaScript client (`@wordpress/abilities`), hybrid abilities for chaining capabilities into workflows, and the WP AI Client in core, which is the provider-agnostic PHP layer for connecting to AI models.
+The Abilities API started as a Composer package you had to install manually. In WordPress 6.9 it landed in core (no plugin, no Composer entry needed) and shipped the first three core abilities. WordPress 7.0 added the JavaScript client (`@wordpress/abilities`), hybrid abilities for chaining capabilities into workflows, and the WP AI Client in core, which is the provider-agnostic PHP layer for connecting to AI models. WordPress 7.1 added a unified `meta.public` flag (one place to say "this ability is meant for external clients"), lifecycle filters around execution, and filtering in `wp_get_abilities()`.
 
-One thing worth clarifying if it comes up: the **Abilities Explorer**, the admin screen for browsing and testing registered abilities, is **not** in WordPress core. It ships as part of the official **AI Experiments plugin** (wordpress.org/plugins/ai). It's a great dev tool, just not built-in. Install the plugin if you want a visual interface during development.
+One thing worth clarifying if it comes up: the **Abilities Explorer**, the admin screen for browsing and testing registered abilities, is **not** in WordPress core. It ships as part of the official **AI plugin** (wordpress.org/plugins/ai). It's a great dev tool, just not built-in. Install the plugin if you want a visual interface during development.
 
 Maybe show the Alfred plugin as another example of an MCP consumer that can talk to WordPress abilities.
 
@@ -40,9 +40,11 @@ That last column, "Coming," is why this matters. The list will only grow. You re
 **Notes on "Coming" items, in case anyone asks:**
 
 - **Workflows API**: chains abilities into named, reusable multi-step sequences. Think WP patterns but for actions instead of blocks. They'll appear in the Command Palette, admin menus, and custom plugin UIs.
-- **A2A (Agent-to-Agent)**: Google's open protocol for AI agents to communicate directly with each other. One agent could call another agent's abilities as part of a larger workflow, no human in the loop.
+- **A2A (Agent-to-Agent)**: an open protocol for AI agents to communicate directly with each other. One agent could call another agent's abilities as part of a larger workflow, no human in the loop.
 - **WebMCP**: an in-browser variant of MCP, so browser-based AI extensions or assistants could call WordPress abilities from the frontend without needing a server proxy.
-- **UTCP (Universal Tool Calling Protocol)**: an emerging lightweight alternative to MCP, still being defined. WordPress is tracking it as a potential future consumer.
+- **UTCP (Universal Tool Calling Protocol)**: an emerging lightweight alternative to MCP, still being defined. It's on the community's radar, not on WordPress's roadmap.
+
+That's why the last row says "Exploring", not "Coming". WebMCP is the one with real momentum: the 7.2 roadmap lists WebMCP experiments in the AI plugin.
 
 ---
 
@@ -63,6 +65,8 @@ Hooks are powerful but dumb. They don't validate input. They don't document outp
 ## Slide 8: The validation chain
 
 The validation chain is strict: input schema → permission callback → execute callback → output schema. One failure anywhere returns a clean `WP_Error`. Your callback never sees bad data, and never runs for the wrong user.
+
+**Skip if behind:** WordPress 7.1 added filters around each step: a short-circuit before execution, input normalisation, the permission result, custom input and output validation, and the final result. Plus a `wp_ability_invoked` action that fires on every call, handy for auditing.
 
 ---
 
@@ -108,16 +112,20 @@ One line. Protects you on sites still running 6.8 or older. Cheap insurance.
 
 ## Slide 15: What core ships today
 
-Three abilities. All read-only. All in the `site` or `user` category. They're deliberately minimal; the goal of 6.9 was to ship the infrastructure, not prescribe every ability. Core keeps the count small so agents don't get overwhelmed with tools before the filtering API matures.
+Three abilities. All read-only. All in the `site` or `user` category. They're deliberately minimal; the goal of 6.9 was to ship the infrastructure, not prescribe every ability.
 
 What they return:
-- `core/get-site-info`: name, URL, description, language, timezone, date/time formats
-- `core/get-user-info`: current user's login, display name, email, roles
-- `core/get-environment-info`: WordPress version, PHP version, active theme, multisite status
+- `core/get-site-info`: name, description, URL, admin email, language, WordPress version
+- `core/get-user-info`: the current user's ID, display name, login, roles and locale. 7.1 added first and last name, nickname, bio and URL
+- `core/get-environment-info`: environment type, PHP version, database server, WordPress version
 
-What's coming in 7.1+: `core/get-active-theme`, `core/list-plugins`, `core/get-site-health`, `core/get-settings`, `core/update-settings`, and an expanded `core/update-user-info`. Together with the three 6.9 abilities, these give an agent everything it needs to orient itself on a new site before taking action.
+Since 7.1 all three accept an optional `fields` input to return only what you ask for.
 
-**Worth flagging on stage:** none of these three are callable via MCP out of the box, only PHP, REST, and WP-CLI. This isn't an oversight, it's deliberate. Registered abilities are not exposed to MCP by default, full stop, regardless of how harmless they look. It's a safety boundary: even a read-only ability like "tell me the site name" has to be explicitly opted in by whoever owns the site, so nothing is agent-callable just by being registered. Same `meta.mcp.public` flag we cover on slide 24; core just defaults it to `false`/unset instead of `true`. If you want Claude to see these three, add a small `wp_register_ability_args` filter that sets `$args['meta']['mcp']['public'] = true` for the `core/*` ability IDs.
+**Say this on stage (yellow box):** since 7.1, all three set `meta.public => true`. That's the new unified flag: one place to say "this ability is meant for external clients". REST uses it as its default, and the MCP Adapter (0.6+) exposes public abilities, so on a current site Claude can see these three out of the box.
+
+The part worth stressing: exposure isn't authorisation. `public` decides who can *see* an ability. The `permission_callback` decides who can *run* it. The 7.1 dev note says it outright: don't treat any exposure flag as a security boundary. We'll use the same flag on slide 24.
+
+**Only if asked (the blue box line):** a merge proposal for 7.1 added `core/read-settings`, `core/read-content` and `core/read-users`. It didn't land. The 7.2 roadmap keeps new abilities in the AI plugin until they prove themselves, with write abilities after that.
 
 ---
 
@@ -131,9 +139,9 @@ Note the rename from earlier versions of this talk: this section used to be fram
 
 ## Slide 17: Install the MCP Adapter
 
-Say plainly: this is not a WordPress.org plugin (yet), you get it from GitHub, `github.com/WordPress/mcp-adapter`. Releases page → download the plugin zip → upload and activate like any other plugin. Composer works too if you'd rather pull it in as a dependency.
+Say plainly: this is not a WordPress.org plugin (yet). Publishing it there is on the 7.2 roadmap. For now you get it from GitHub, `github.com/WordPress/mcp-adapter`: Releases, download the plugin zip, upload and activate like any other plugin. Or one WP-CLI command that does the same thing. Composer still works, but the project no longer recommends it.
 
-No feature flag, no settings screen to visit. Activating the plugin is enough: it creates a default MCP server automatically, exposing every ability that's been marked `meta.mcp.public => true` (the same flag from slide 24). Two transports ship out of the box: HTTP at `/wp-json/mcp/mcp-adapter-default-server`, and STDIO via `wp mcp-adapter serve` for local dev.
+No feature flag, no settings screen to visit. Activating the plugin is enough: it creates a default MCP server automatically. It doesn't turn every public ability into its own MCP tool. It exposes three tools, discover, get ability info and execute, and the agent uses those to find and run any public ability. Two transports ship out of the box: HTTP at `/wp-json/mcp/mcp-adapter-default-server`, and STDIO via `wp mcp-adapter serve --user=<admin>` for local dev.
 
 This replaces the old `woocommerce_feature_mcp_integration_enabled` flag entirely; there's nothing WooCommerce-specific to turn on anymore.
 
@@ -143,7 +151,7 @@ This replaces the old `woocommerce_feature_mcp_integration_enabled` flag entirel
 
 Good news here: the setup got simpler, not more complex. The old flow needed a local Node proxy; this one doesn't. Claude Code talks HTTP straight to the adapter's endpoint.
 
-What you do need: a WordPress account with the right capability for whatever abilities you're calling (`manage_woocommerce` for the WooCommerce ones we're using today) and an **Application Password** for that account. Create it under Users → Your Profile → Application Passwords. Name it, click Add, and copy the password immediately, WordPress only shows it once.
+What you do need: a WordPress account allowed to do whatever you'll ask. The WooCommerce abilities check the same capabilities as the WooCommerce REST API, so a Shop Manager or an administrator works. And an **Application Password** for that account. Create it under Users → Your Profile → Application Passwords. Name it, click Add, and copy the password immediately, WordPress only shows it once.
 
 ---
 
@@ -182,6 +190,8 @@ _Run the four demo prompts live. Go slow. Let each result land before moving to 
 3. "What's my total revenue this week, broken down by day?" (**check if processing orders are included in the revenue figure or only completed ones**)
 4. "Update product #42 stock to 0"
 
+What the room sees on screen: Claude calls `mcp-adapter-discover-abilities` once, then `mcp-adapter-execute-ability` with the ability name (`woocommerce/orders-query` and so on) as a parameter. Point at that parameter, not the tool name.
+
 ---
 
 ## Slide 22: Section 5: Creating your own abilities
@@ -202,16 +212,11 @@ Walk through the anatomy slowly:
 - `input_schema`: JSON Schema object. `order_id` is required, `volumes` is optional, defaults to 1
 - `output_schema`: only `tracking_number` and `label_url`, both required. No `success` boolean, no `error_message` string. If something goes wrong, the execute callback returns a `WP_Error`, that's the contract all ability consumers expect. Don't duplicate error handling in the output schema.
 - `permission_callback`: inline, explicit, per-ability. No more scattered `current_user_can()` checks
-- `meta.mcp`: this is the important one to call out:
+- `meta.public`: this is the important one to call out. One line, new in WordPress 7.1, and it's "register once" in a nutshell: it tells every channel that this ability is meant for external clients. REST uses it as its default, the **WordPress MCP Adapter** exposes it, and future channels will read the same flag. Without it, the ability still works from PHP and WP-CLI, but no REST or MCP client will find it.
 
-```php
-'mcp' => array(
-    'public' => true,
-    'type'   => 'tool',
-),
-```
+  Channel-specific flags still work and win when set: `show_in_rest`, or `'mcp' => array( 'public' => true )` for MCP only. You'll see those in plenty of code written before 7.1, including WooCommerce's own abilities.
 
-  Setting `public => true` here is what makes this ability show up in the **WordPress MCP Adapter** (the standard, transport-neutral surface) and not only on WooCommerce's own internal MCP bridge. Without it, the ability exists and works fine everywhere else (REST, WP-CLI, PHP), but no generic MCP client will discover it.
+  And the same reminder as slide 15: `public` is exposure, not authorisation. The `permission_callback` is what protects it.
 - `meta.annotations`: for this ability, not readonly, not destructive, not idempotent (it creates something in the courier API)
 
 ---
@@ -220,7 +225,7 @@ Walk through the anatomy slowly:
 
 The second argument to the filter is the ability ID string, not a `WP_Ability` object. Use `str_starts_with` to match the entire namespace. One filter, all your abilities.
 
-**Say this on stage:** as of WooCommerce 10.9, `woocommerce_mcp_include_ability` is deprecated. It only ever scoped the old WooCommerce-specific MCP bridge, and that bridge is now on its way out. WooCommerce abilities (yours included) are exposed through the standard WordPress MCP Adapter instead, the same one we just set up on slide 24 via `meta.mcp.public`. Set that flag on the ability and it's discovered automatically. No filter needed.
+**Say this on stage:** as of WooCommerce 10.9, `woocommerce_mcp_include_ability` is deprecated. It only ever scoped the old WooCommerce-specific MCP bridge, and that bridge is now on its way out. WooCommerce abilities (yours included) are exposed through the standard WordPress MCP Adapter instead, the same one we just set up on slide 24 via `meta.public`. Set that flag on the ability and it's discovered automatically. No filter needed. The bridge itself is still shipped (WooCommerce 11.1 still has it) but marked for removal.
 
 I'm keeping this slide in the talk because it's still what you'll see in most existing tutorials and blog posts today, and it's a good illustration of how the filter pattern works, just flag it as legacy.
 
@@ -253,6 +258,8 @@ Then mark each of those orders as completed.
 Before running: A word of warning. Don't run this in production without testing first. Preferably not while your client is watching their Slack in real time. This prompt will also consume a frankly embarrassing number of tokens. Think of it as hiring a very capable intern and paying per word they think. Don't try this at home, or at least not on a live store.
 
 _Run the prompt. Stay calm. Let it work._
+
+**While it runs:** every call shows up as `mcp-adapter-execute-ability`. Read out the ability names as they scroll past: `woocommerce/`, `woo-dpd-portugal/`, `webdados-toolbox/`. Three plugins, three authors, one prompt.
 
 Once it's done: let the applause land, then press next. "How cool was that?" fades in on its own, nothing shows before you press. Pause. Press next again for "Well... it depends." to fade in underneath. Press next once more to move to the following slide. If you ever step backward from slide 28 into this one, both lines come back fully visible, and prev from there hides them one at a time, so you can safely rewind mid-talk without losing your place.
 
@@ -287,7 +294,7 @@ Every ability you register today is automatically available to PHP, REST, WP-CLI
 On the last bullet: this is a practical tip worth emphasising. If you have an ability that creates shipping labels for all processing orders, the ability itself should query the orders, apply the business logic, and return a clean result. Don't ask the agent to fetch orders first, then loop, then decide volumes. That's slower, more expensive in tokens, and you're trusting the model with logic that should live in your code.
 
 **>>> NOTE <<<**
-Worth calling out explicitly: this is "register once" playing out in the real world. WooCommerce deprecated its own MCP bridge (the `woocommerce_mcp_include_ability` filter we saw on slide 25) in favor of the shared WordPress MCP Adapter covered in Section 4. None of the abilities themselves changed. Only the transport did. If you'd registered abilities the way slide 24 shows, WooCommerce's transition cost you nothing. That's the whole pitch of this slide, proven by a real deprecation that happened between writing this talk and giving it.
+Worth calling out explicitly: this is "register once" playing out in the real world. WooCommerce deprecated its own MCP bridge (the `woocommerce_mcp_include_ability` filter we saw on slide 25) in favor of the shared WordPress MCP Adapter covered in Section 4. It's still shipped for now, marked for removal. None of the abilities themselves changed. Only the transport did. If you'd registered abilities the way slide 24 shows, WooCommerce's transition cost you nothing. That's the whole pitch of this slide, proven by a real deprecation that happened between writing this talk and giving it.
 
 ---
 
@@ -301,4 +308,4 @@ _Leave this slide up during Q&A. Invite people to scan/copy the links._
 
 _Done. Breathe. Take questions._
 
-The slides will be shared in the meetup event comments as soon as possible after the talk. The GitHub repo is already live at `github.com/webdados/The-WordPress-Abilities-API-talk`.
+The slides and notes are on GitHub: `github.com/webdados/The-WordPress-Abilities-API-talk`. The QR code on screen goes there.
