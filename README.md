@@ -4,16 +4,34 @@
 **Talk by [Marco Almeida](https://webdados.pt) ([@marcoalmeidapt](https://x.com/marcoalmeidapt))**  
 - WordPress Lisboa Meetup · June 11, 2026 (see version 1.1)
 - WordPress Faro Meetup · September 3, 2026 (see version 2.0)
+- WordPress Day for AI 2026 · Faro · October 24, 2026 (30-minute version, see version 3.0)
 
 ---
 
 ## About this talk
 
-The WordPress Abilities API, introduced in WordPress 6.9, gives WordPress a central registry of named, self-describing units of functionality. Register what your plugin can do once, and every surface that understands abilities can discover and use it: PHP, REST API, WP-CLI, MCP (AI agents), the Command Palette, and more.
+The WordPress Abilities API, introduced in WordPress 6.9, gives WordPress a central registry of named, self-describing units of functionality. Register what your plugin can do once, and every surface that understands abilities can discover and use it: PHP, REST API, WP-CLI, JavaScript, MCP (AI agents), and whatever comes next.
 
 This talk covers what the Abilities API is, why it's a meaningful step forward from hooks, how to use it, and how WooCommerce 10.9 exposes canonical domain abilities through the shared **WordPress MCP Adapter**, letting you interact with your store through natural language using Claude Code.
 
 The live demo uses [DPD Portugal for WooCommerce](https://nakedcatplugins.com/shop/woocommerce-plugins/dpd-portugal-for-woocommerce/) to show a complete real-world workflow: creating shipping labels, generating end-of-day reports, sending customer SMS notifications, and completing orders, all from a single prompt.
+
+---
+
+## Two versions
+
+| Version | Length | Slides | Deck | Speaker notes |
+|---|---|---|---|---|
+| Full talk | 60 minutes | 32 | [Open the 60-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk.html) | [`abilities-api-speaker-notes.md`](abilities-api-speaker-notes.md) |
+| Short talk | 30 minutes (including Q&A) | 27 | [Open the 30-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk-30min.html) | [`abilities-api-speaker-notes-30min.md`](abilities-api-speaker-notes-30min.md) |
+
+Both cover the same ideas and share the same facts. The 30-minute version is tighter:
+
+- No separate WP-CLI and backwards-compatibility slides (both points live on in the speaker notes)
+- No legacy `woocommerce_mcp_include_ability` filter slide
+- Installing the MCP Adapter and connecting Claude Code fit on a single slide
+- The first live demo is a single prompt; the full workflow demo stays
+- Speaker notes mark what to skip when running behind
 
 ---
 
@@ -33,12 +51,14 @@ The live demo uses [DPD Portugal for WooCommerce](https://nakedcatplugins.com/sh
 
 | File | Description |
 |---|---|
-| `abilities-api-talk.html` | Self-contained HTML slideshow (31 slides, keyboard navigation, deep links) |
-| `abilities-api-speaker-notes.md` | Speaker notes for all 31 slides |
+| `abilities-api-talk.html` | 60-minute version: self-contained HTML slideshow (32 slides, keyboard navigation, deep links) |
+| `abilities-api-speaker-notes.md` | Speaker notes for all 32 slides of the 60-minute version |
+| `abilities-api-talk-30min.html` | 30-minute version: same format, 27 slides |
+| `abilities-api-speaker-notes-30min.md` | Speaker notes for all 27 slides of the 30-minute version |
 
 ### Running the slides
 
-[Open `abilities-api-talk.html` in any browser](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk.html). Navigate with:
+Open either deck in any browser: [60-minute version](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk.html) or [30-minute version](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk-30min.html). Navigate with:
 - **Arrow keys** or **Space**: next/previous slide
 - **Home / End**: first/last slide
 - **URL hash**: link directly to a slide: `#slide-14`
@@ -52,6 +72,8 @@ The live demo uses [DPD Portugal for WooCommerce](https://nakedcatplugins.com/sh
 - [Abilities API documentation](https://developer.wordpress.org/apis/abilities-api/)
 - [Abilities API in WordPress 6.9](https://make.wordpress.org/core/2025/11/10/abilities-api-in-wordpress-6-9/)
 - [Client-side Abilities API in WordPress 7.0](https://make.wordpress.org/core/2026/03/24/client-side-abilities-api-in-wordpress-7-0/)
+- [A unified public exposure flag for Abilities in WordPress 7.1](https://make.wordpress.org/core/2026/08/04/a-unified-public-exposure-flag-for-abilities-in-wordpress-7-1/)
+- [Abilities API improvements in WordPress 7.1](https://make.wordpress.org/core/2026/07/31/abilities-api-improvements-in-wordpress-7-1/)
 - [WordPress MCP Adapter intro](https://developer.wordpress.org/news/2026/02/from-abilities-to-ai-agents-introducing-the-wordpress-mcp-adapter/)
 - [WordPress MCP Adapter (GitHub)](https://github.com/WordPress/mcp-adapter)
 - [WP-CLI ability command](https://github.com/wp-cli/ability-command)
@@ -65,6 +87,18 @@ The live demo uses [DPD Portugal for WooCommerce](https://nakedcatplugins.com/sh
 ---
 
 ## Version history
+
+**v3.0**, to be tagged and presented at WordPress Day for AI 2026, Faro, October 24, 2026
+- New 30-minute version of the talk, alongside the 60-minute one
+- Both versions re-checked against WordPress 7.1, WooCommerce 11.1 and MCP Adapter 0.6
+- WordPress 7.1's unified `meta.public` flag: added to the timeline, used in the custom ability example, and explained on the core abilities slide, with the point that exposure is not authorisation
+- Corrected what the three core abilities return, and that since 7.1 they are exposed to REST and MCP
+- The MCP Adapter's default server exposes three tools (discover, inspect, execute) rather than one tool per ability; demo notes updated to match
+- MCP Adapter install via the GitHub zip or a single WP-CLI command; Composer is no longer recommended
+- WooCommerce abilities use the same capabilities as the WooCommerce REST API (a Shop Manager works), not a fixed `manage_woocommerce` check
+- The WooCommerce MCP bridge is described as deprecated but still shipped
+- Consumers table: MCP marked as a plugin, A2A, WebMCP and UTCP as "Exploring"
+- The 60-minute title slide no longer names a specific event
 
 **v2.0**, WordPress Faro Meetup, September 3, 2026
 - Section 4 rebuilt around the **WordPress MCP Adapter**, replacing the deprecated WooCommerce-specific MCP beta (feature flag, `/wp-json/woocommerce/mcp`, API-key auth, local proxy)
