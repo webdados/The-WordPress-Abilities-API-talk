@@ -147,7 +147,7 @@ Since 7.1 all three accept an optional `fields` input to return only what you as
 
 **Say this on stage (yellow box):** since 7.1, all three set `meta.public => true`. That's the new unified flag: one place to say "this ability is meant for external clients". REST uses it as its default, and the MCP Adapter (0.6+) exposes public abilities, so on a current site Claude can see these three out of the box.
 
-The part worth stressing: exposure isn't authorisation. `public` decides who can *see* an ability. The `permission_callback` decides who can *run* it. The 7.1 dev note says it outright: don't treat any exposure flag as a security boundary. We'll use the same flag on slide 25.
+The part worth stressing: exposure isn't authorisation. `public` decides who can *see* an ability. The `permission_callback` decides who can *run* it. The 7.1 dev note says it outright: don't treat any exposure flag as a security boundary. We'll use the same flag on slide 24.
 
 **Only if asked (the blue box line):** a merge proposal for 7.1 added `core/read-settings`, `core/read-content` and `core/read-users`. It didn't land. The 7.2 roadmap keeps new abilities in the AI plugin until they prove themselves, with write abilities after that.
 
@@ -185,8 +185,6 @@ Two steps on screen: base64-encode `username:application-password` (standard HTT
 
 No `npx`, no proxy process running in the background translating protocols. Claude Code is a native MCP HTTP client now, so it just talks to the endpoint directly. One command, restart Claude Code, done.
 
-**Only if asked** ("so how are your demos connected?"): to the deprecated WooCommerce endpoint, `/wp-json/woocommerce/mcp`, with WooCommerce's MCP feature turned on and a read/write REST API key sent as an `X-MCP-API-Key: consumer_key:consumer_secret` header. One tool per ability, no Adapter. Slide 21 explains why.
-
 ---
 
 ## Slide 20: What WooCommerce exposes
@@ -201,23 +199,17 @@ Seven canonical abilities out of the box: the current list as of WooCommerce 10.
   - `woocommerce/product-update`: update product
   - `woocommerce/product-delete`: delete/trash/restore product
 
-Looks like enough. Let's check what they actually return.
+Enough to build genuinely useful workflows. Let me show you.
 
-**If someone asks "didn't this used to be nine?"** Yes. The old REST-bridge beta had 9: products covered list, get, create, update, delete (5), orders covered list, get, create, update (4). The canonical set trades that structure for 7: products keep 4 ops with `query` absorbing list+get into one call, orders drop to 3, losing standalone `order-create` and `order-get`, gaining `order-add-note`, which the old bridge never had. Net fewer tools, each one a proper schema-defined domain operation. But fewer tools also brought fewer fields: an order comes back without the customer's phone or address, a product without its categories. That's the next slide.
+**If someone asks "didn't this used to be nine?"** Yes. The old REST-bridge beta had 9: products covered list, get, create, update, delete (5), orders covered list, get, create, update (4). The canonical set trades that structure for 7: products keep 4 ops with `query` absorbing list+get into one call, orders drop to 3, losing standalone `order-create` and `order-get`, gaining `order-add-note`, which the old bridge never had. Net fewer tools, but each one is a proper schema-defined domain operation instead of a thin REST wrapper.
 
----
+Point at the small line under the table: these return less than the old bridge did. Customer personal data is left out on purpose, the right call for anything an AI reads. Some product data, like categories, is just missing for now, and I opened an issue for it.
 
-## Slide 21: The new abilities are thin. For now.
-
-These abilities are where WooCommerce is going, and the old MCP endpoint is deprecated. But look at what they return today. The demo coming up later needs the customer's phone, the shipping country and the product category. None of that comes back. I opened an issue about it.
-
-So in these demos I'll still use the now deprecated WooCommerce built-in MCP, which returns the full REST data. Same idea, one tool per ability, older names: `woocommerce-orders-list` instead of `woocommerce/orders-query`.
-
-**Only if asked:** yes, you could add the missing fields yourself with core's `wp_register_ability_args` filter. That's a hack, not a solution.
+**Only if asked** ("so how does your demo know the categories?"): a few lines of my own, on core's `wp_register_ability_args` filter, add categories to `products-query` and let it filter by them. Same names and shapes as the REST API, so nothing changes if WooCommerce adds them itself.
 
 ---
 
-## Slide 22: Live demo: WooCommerce abilities
+## Slide 21: Live demo: WooCommerce abilities
 
 _Run the four demo prompts live. Go slow. Let each result land before moving to the next._
 
@@ -226,17 +218,17 @@ _Run the four demo prompts live. Go slow. Let each result land before moving to 
 3. "What's my total revenue this week, broken down by day?" (**check if processing orders are included in the revenue figure or only completed ones**)
 4. "Update product #42 stock to 0"
 
-What the room sees on screen: one tool per ability, from the deprecated WooCommerce endpoint: `woocommerce-orders-list`, `woocommerce-products-list`, `woocommerce-products-update`. Point at the tool names.
+What the room sees on screen: Claude calls `mcp-adapter-discover-abilities` once, then `mcp-adapter-execute-ability` with the ability name (`woocommerce/orders-query` and so on) as a parameter. Point at that parameter, not the tool name.
 
 ---
 
-## Slide 23: Section 5: Creating your own abilities
+## Slide 22: Section 5: Creating your own abilities
 
 WooCommerce's built-in abilities are just the start. Your plugin can join that conversation. Note that the example we'll show is WooCommerce-specific (registering its own category, using WooCommerce permissions), but the principle is exactly the same for any WordPress ability in any context.
 
 ---
 
-## Slide 24: Step 1: Register a category
+## Slide 23: Step 1: Register a category
 
 Register your category on `wp_abilities_api_categories_init`. This groups your abilities in the Abilities Explorer, the CLI output, and any UI that lists abilities by category.
 
@@ -244,7 +236,7 @@ Register your category on `wp_abilities_api_categories_init`. This groups your a
 
 ---
 
-## Slide 25: Step 2: Register the ability
+## Slide 24: Step 2: Register the ability
 
 Walk through the anatomy slowly:
 - `input_schema`: JSON Schema object. `order_id` is required, `volumes` is optional, defaults to 1
@@ -261,23 +253,23 @@ Walk through the anatomy slowly:
 
 ---
 
-## Slide 26: Step 3: The legacy filter
+## Slide 25: Step 3: The legacy filter
 
 The second argument to the filter is the ability ID string, not a `WP_Ability` object. Use `str_starts_with` to match the entire namespace. One filter, all your abilities.
 
-**Say this on stage:** as of WooCommerce 10.9, `woocommerce_mcp_include_ability` is deprecated. It only ever scoped the old WooCommerce-specific MCP bridge, and that bridge is now on its way out. WooCommerce abilities (yours included) are exposed through the standard WordPress MCP Adapter instead, the Adapter from slide 17. Set `meta.public` on the ability, as on slide 25, and it's discovered automatically. No filter needed. The bridge itself is still shipped (WooCommerce 11.1 still has it) but marked for removal.
+**Say this on stage:** as of WooCommerce 10.9, `woocommerce_mcp_include_ability` is deprecated. It only ever scoped the old WooCommerce-specific MCP bridge, and that bridge is now on its way out. WooCommerce abilities (yours included) are exposed through the standard WordPress MCP Adapter instead, the Adapter from slide 17. Set `meta.public` on the ability, as on slide 24, and it's discovered automatically. No filter needed. The bridge itself is still shipped (WooCommerce 11.1 still has it) but marked for removal.
 
 I'm keeping this slide in the talk because it's still what you'll see in most existing tutorials and blog posts today, and it's a good illustration of how the filter pattern works, just flag it as legacy.
 
 ---
 
-## Slide 27: Section 6: Live demo
+## Slide 26: Section 6: Live demo
 
 Real plugin. Real courier API. The store is a demo install, because you don't want to watch me accidentally ship 200 packages to my own house live on stage.
 
 ---
 
-## Slide 28: The prompt
+## Slide 27: The prompt
 
 Type this live into Claude Code:
 
@@ -291,27 +283,27 @@ Once all labels are created, generate the end-of-day report and request a collec
 
 For every order where a label was created, send an SMS to the customer with the shipping date and tracking number.
 
-Then mark each of those orders as completed.
+Then set each of those orders as completed, after adding an order note stating the DPD issuing and SMS sent or not.
 
 ---
 
-Before running, remind them: this is the job that needs the customer's phone and the product categories, which is why we're on the deprecated endpoint. Then a word of warning. Don't run this in production without testing first. Preferably not while your client is watching their Slack in real time. This prompt will also consume a frankly embarrassing number of tokens. Think of it as hiring a very capable intern and paying per word they think. Don't try this at home, or at least not on a live store.
+Before running: A word of warning. Don't run this in production without testing first. Preferably not while your client is watching their Slack in real time. This prompt will also consume a frankly embarrassing number of tokens. Think of it as hiring a very capable intern and paying per word they think. Don't try this at home, or at least not on a live store.
 
 _Run the prompt. Stay calm. Let it work._
 
-**While it runs:** one tool per ability, under the deprecated endpoint's names. Read them out as they scroll past: `woocommerce-orders-list`, `woo-dpd-portugal-create-shipping-label`, `webdados-toolbox-send-sms`. Three plugins, three authors, one prompt.
+**While it runs:** every call shows up as `mcp-adapter-execute-ability`. Read out the ability names as they scroll past: `woocommerce/`, `woo-dpd-portugal/`, `webdados-toolbox/`. Three plugins, three authors, one prompt.
 
-Once it's done: let the applause land, then press next. "How cool was that?" fades in on its own, nothing shows before you press. Pause. Press next again for "Well... it depends." to fade in underneath. Press next once more to move to the following slide. If you ever step backward from slide 29 into this one, both lines come back fully visible, and prev from there hides them one at a time, so you can safely rewind mid-talk without losing your place.
+Once it's done: let the applause land, then press next. "How cool was that?" fades in on its own, nothing shows before you press. Pause. Press next again for "Well... it depends." to fade in underneath. Press next once more to move to the following slide. If you ever step backward from slide 28 into this one, both lines come back fully visible, and prev from there hides them one at a time, so you can safely rewind mid-talk without losing your place.
 
 ---
 
-## Slide 29: Same abilities, smarter caller
+## Slide 28: Same abilities, smarter caller
 
 This slide backs the "well, it depends" turn. Talk through what Claude actually did to pull off that one prompt.
 
-**Say this on stage:** walk the left column first. Point out the namespaces on each pill, not just the ability names. `woocommerce/orders-query`, `woo-dpd-portugal/create-shipping-label`, `webdados-toolbox/send-sms`. Three different plugins, three different authors, all speaking the same Abilities API, all callable from the same prompt. That's worth a beat on its own. (The pills use the new ability names; on screen you saw the old endpoint's, like `woocommerce-orders-list` and `woocommerce-products-get`. Same steps.)
+**Say this on stage:** walk the left column first. Point out the namespaces on each pill, not just the ability names. `woocommerce/orders-query`, `woo-dpd-portugal/create-shipping-label`, `webdados-toolbox/send-sms`. Three different plugins, three different authors, all speaking the same Abilities API, all callable from the same prompt. That's worth a beat on its own.
 
-Then walk what Claude actually had to do to get there. Finding the orders was one call. But the volume rule, "1 volume per order, unless it's a Large Items category item, then add 1 extra volume per unit", meant Claude had to look up the product category for every single line item, one `products-query` call at a time, looped, uncached, because it has no reason to know it should cache. Between every one of those calls, Claude is also the one doing the counting, checking each result, and deciding what to call next. That reasoning happens in tokens, every single time, even though the logic never changes. Then it's one `create-shipping-label`, one `order-update-status`, one `send-sms`, per order. For 15 orders, that's not 7 tool calls, it's closer to 60, plus every round trip and every decision in between costs tokens and latency.
+Then walk what Claude actually had to do to get there. Finding the orders was one call. But the volume rule, "1 volume per order, unless it's a Large Items category item, then add 1 extra volume per unit", meant Claude had to look up the product category for every single line item, one `products-query` call at a time, looped, uncached, because it has no reason to know it should cache. Between every one of those calls, Claude is also the one doing the counting, checking each result, and deciding what to call next. That reasoning happens in tokens, every single time, even though the logic never changes. Then it's one `create-shipping-label`, one `order-add-note`, one `order-update-status`, one `send-sms`, per order. For 15 orders, that's not 8 tool calls, it's closer to 60, plus every round trip and every decision in between costs tokens and latency.
 
 Now the turn: if this is the exact same job, same rules, every single morning, none of that reasoning is needed at all. That's the right column. One custom ability, `my-custom-abilities/process-daily-orders`, takes a date. Same "one prompt" experience for whoever triggers it, but now the prompt calls one ability, not sixty.
 
@@ -321,30 +313,30 @@ Now the turn: if this is the exact same job, same rules, every single morning, n
 
 ---
 
-## Slide 30: Section 7: What this changes for you
+## Slide 29: Section 7: What this changes for you
 
 You've been writing hooks for years. This isn't a replacement. It's an upgrade.
 
 ---
 
-## Slide 31: Register once. Let everything in.
+## Slide 30: Register once. Let everything in.
 
 Every ability you register today is automatically available to PHP, REST, WP-CLI, MCP, JavaScript, and whatever surfaces come next (the Command Palette and the Workflows API are on the way). You don't rewire anything.
 
 On the last bullet: this is a practical tip worth emphasising. If you have an ability that creates shipping labels for all processing orders, the ability itself should query the orders, apply the business logic, and return a clean result. Don't ask the agent to fetch orders first, then loop, then decide volumes. That's slower, more expensive in tokens, and you're trusting the model with logic that should live in your code.
 
 **>>> NOTE <<<**
-Worth calling out explicitly: this is "register once" playing out in the real world. WooCommerce deprecated its own MCP bridge (the `woocommerce_mcp_include_ability` filter we saw on slide 26) in favor of the shared WordPress MCP Adapter covered in Section 4. It's still shipped for now, marked for removal. If you'd registered abilities the way slide 25 shows, the transport change cost you nothing. WooCommerce's own abilities did change in the move, though: the new domain ones return less data, which is why today's demos ran on the old bridge (slide 21).
+Worth calling out explicitly: this is "register once" playing out in the real world. WooCommerce deprecated its own MCP bridge (the `woocommerce_mcp_include_ability` filter we saw on slide 25) in favor of the shared WordPress MCP Adapter covered in Section 4. It's still shipped for now, marked for removal. None of the abilities themselves changed. Only the transport did. If you'd registered abilities the way slide 24 shows, WooCommerce's transition cost you nothing. That's the whole pitch of this slide, proven by a real deprecation that happened between writing this talk and giving it.
 
 ---
 
-## Slide 32: References
+## Slide 31: References
 
 _Leave this slide up during Q&A. Invite people to scan/copy the links._
 
 ---
 
-## Slide 33: Questions or suggestions?
+## Slide 32: Questions or suggestions?
 
 _Done. Breathe. Take questions._
 

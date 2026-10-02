@@ -13,7 +13,7 @@
 
 The WordPress Abilities API, introduced in WordPress 6.9, gives WordPress a central registry of named, self-describing units of functionality. Register what your plugin can do once, and every surface that understands abilities can discover and use it: PHP, REST API, WP-CLI, JavaScript, MCP (AI agents), and whatever comes next.
 
-This talk covers what the Abilities API is, why it's a meaningful step forward from hooks, how to use it, and how WooCommerce 10.9 exposes canonical domain abilities through the shared **WordPress MCP Adapter**, letting you interact with your store through natural language using Claude Code. The demos run on WooCommerce's deprecated built-in MCP endpoint, because the new domain abilities don't yet return the data the shipping workflow needs ([woocommerce/woocommerce#69325](https://github.com/woocommerce/woocommerce/issues/69325)).
+This talk covers what the Abilities API is, why it's a meaningful step forward from hooks, how to use it, and how WooCommerce 10.9 exposes canonical domain abilities through the shared **WordPress MCP Adapter**, letting you interact with your store through natural language using Claude Code.
 
 The live demo uses [DPD Portugal for WooCommerce](https://nakedcatplugins.com/shop/woocommerce-plugins/dpd-portugal-for-woocommerce/) to show a complete real-world workflow: creating shipping labels, generating end-of-day reports, sending customer SMS notifications, and completing orders, all from a single prompt.
 
@@ -23,8 +23,8 @@ The live demo uses [DPD Portugal for WooCommerce](https://nakedcatplugins.com/sh
 
 | Version | Length | Slides | Deck | Speaker notes |
 |---|---|---|---|---|
-| Full talk | 60 minutes | 33 | [Open the 60-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk.html) | [`abilities-api-speaker-notes.md`](abilities-api-speaker-notes.md) |
-| Short talk | 30 minutes | 28 | [Open the 30-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk-30min.html) | [`abilities-api-speaker-notes-30min.md`](abilities-api-speaker-notes-30min.md) |
+| Full talk | 60 minutes | 32 | [Open the 60-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk.html) | [`abilities-api-speaker-notes.md`](abilities-api-speaker-notes.md) |
+| Short talk | 30 minutes | 27 | [Open the 30-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk-30min.html) | [`abilities-api-speaker-notes-30min.md`](abilities-api-speaker-notes-30min.md) |
 
 Both cover the same ideas and share the same facts. The 30-minute version is tighter:
 
@@ -41,7 +41,7 @@ Both cover the same ideas and share the same facts. The 30-minute version is tig
 1. **Introduction**: What is the Abilities API? Timeline. Consumers.
 2. **Technical**: Why better than hooks? Validation chain. Annotations.
 3. **How to use**: Functions, WP-CLI (60-minute version), core abilities.
-4. **Abilities API & the MCP Adapter**: Install the adapter, connect Claude Code, what WooCommerce's abilities return today, live demo.
+4. **Abilities API & the MCP Adapter**: Install the adapter, connect Claude Code, live demo.
 5. **Creating your own abilities**: Register, define schemas, expose on MCP.
 6. **Live demo**: DPD Portugal for WooCommerce full workflow.
 7. **What this changes for you**: The bigger picture.
@@ -52,10 +52,10 @@ Both cover the same ideas and share the same facts. The 30-minute version is tig
 
 | File | Description |
 |---|---|
-| `abilities-api-talk.html` | 60-minute version: self-contained HTML slideshow (33 slides, keyboard navigation, deep links) |
-| `abilities-api-speaker-notes.md` | Speaker notes for all 33 slides of the 60-minute version |
-| `abilities-api-talk-30min.html` | 30-minute version: same format, 28 slides |
-| `abilities-api-speaker-notes-30min.md` | Speaker notes for all 28 slides of the 30-minute version |
+| `abilities-api-talk.html` | 60-minute version: self-contained HTML slideshow (32 slides, keyboard navigation, deep links) |
+| `abilities-api-speaker-notes.md` | Speaker notes for all 32 slides of the 60-minute version |
+| `abilities-api-talk-30min.html` | 30-minute version: same format, 27 slides |
+| `abilities-api-speaker-notes-30min.md` | Speaker notes for all 27 slides of the 30-minute version |
 
 ### Running the slides
 
@@ -105,9 +105,8 @@ Open either deck in any browser: [60-minute version](https://webdados.github.io/
 - MCP Adapter install via the GitHub zip or a single WP-CLI command; Composer is no longer recommended
 - WooCommerce abilities use the same capabilities as the WooCommerce REST API (a Shop Manager works), not a fixed `manage_woocommerce` check
 - The WooCommerce MCP bridge is described as deprecated but still shipped
-- New slide on what WooCommerce's domain abilities return today: no customer phone or address, no product categories. The demos run on the deprecated WooCommerce MCP endpoint until that's fixed, and the notes use the tool names the room will see
-- "Register once" note reworded: WooCommerce's abilities did change in the move to the MCP Adapter
-- Order notes dropped from the shipping workflow comparison slide
+- Short note on what WooCommerce's domain abilities leave out: customer personal data on purpose, product categories for now
+- The shipping workflow prompt adds an order note to each order
 - Consumers table: MCP marked as a plugin, A2A, WebMCP and UTCP as "Exploring"
 - The 60-minute title slide no longer names a specific event
 

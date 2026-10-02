@@ -11,15 +11,16 @@ Markers used below:
 
 ## Before the talk
 
-**A few days before:** create 4 or 5 new orders on the demo store, all "processing", dated October. One or two with a "Large Items" product, one of them with quantity 2, so the extra-volume rule visibly kicks in. Being in October, they also show up in slide 18's sales total.
+**A few days before:** create 4 or 5 new orders on the demo store, all "processing", dated October. One or two with a "Large Items" product, one of them with quantity 2, so the extra-volume rule visibly kicks in. Being in October, they also show up in slide 17's sales total.
 
 **The day before, and again that morning:**
-- `woocommerce_mcp_abilities_demo` (the deprecated WooCommerce MCP endpoint) shows as connected in `/mcp`, and `mcp_abilities_demo` (the MCP Adapter) is disabled, so every demo runs on the one server. Changed anything? Restart Claude Code: a newly added server only loads at startup.
-- WooCommerce's MCP feature still on (WooCommerce > Settings > Advanced > Features) and the REST API key behind the `X-MCP-API-Key` header still valid.
+- `mcp_abilities_demo` shows as connected in `/mcp`. Changed anything? Restart Claude Code: a newly added server only loads at startup.
+- MCP Adapter plugin active on the demo site. If it's off, the copy bundled in WooCommerce still answers, but it hides every error message behind "An error occurred while executing the tool."
+- Webdados Toolbox's "Improve WooCommerce abilities" setting on: the volume rule needs the product categories.
 - DPD Portugal licence active on the demo site. The plugin only registers its abilities while the licence is valid; expired means no DPD abilities and the demo fails quietly.
 - DPD credentials valid, and "next Friday" (October 30) accepted as a shipping date.
 - SMS credits available, and the demo customer's phone number is yours. Every order uses the same customer, so every SMS lands on that one phone.
-- A quick `woocommerce-orders-list` with status "processing" returns the new orders.
+- A quick `orders-query` with status "processing" returns the new orders.
 - Terminal font big enough for the back row.
 - Phone hotspot ready in case the venue network fails.
 - A screen recording of a full rehearsal, as the fallback if nothing connects on the day.
@@ -159,7 +160,7 @@ But exposure isn't authorisation. `public` decides who can *see* an ability; the
 
 Not a chatbot bolted onto your admin. Your actual store data, your actual permissions, your actual business logic, through natural language.
 
-WooCommerce used to ship its own MCP bridge. Since WooCommerce 10.9 it's deprecated, and WooCommerce abilities go through the standard WordPress MCP Adapter like any other plugin's.
+**Skip if behind:** WooCommerce used to ship its own MCP bridge. Since WooCommerce 10.9 it's deprecated, and WooCommerce abilities go through the standard WordPress MCP Adapter like any other plugin's.
 
 ---
 
@@ -175,37 +176,29 @@ Three: one command. Base64 the username and password, send it as a Basic auth he
 
 **Skip if behind:** the WP-CLI one-liner on the slide does the download and activation in one go; publishing on WordPress.org is on the 7.2 roadmap; the STDIO transport (`wp mcp-adapter serve --user=<admin>`) for local dev; that this replaced the old WooCommerce feature flag.
 
-**Only if asked** ("so how are your demos connected?"): to the deprecated WooCommerce endpoint, `/wp-json/woocommerce/mcp`, with WooCommerce's MCP feature turned on and a read/write REST API key sent as an `X-MCP-API-Key: consumer_key:consumer_secret` header. One tool per ability, no Adapter. Slide 17 explains why.
-
 ---
 
 ## Slide 16: What WooCommerce exposes
 
-Seven abilities out of the box. Orders: query, add a note, update status. Products: query, create, update, delete. Looks like enough. Let's check what they actually return.
+Seven abilities out of the box. Orders: query, add a note, update status. Products: query, create, update, delete. Enough to build useful workflows. Let me show you.
 
-**Only if asked** ("didn't this used to be nine?"): yes, the old bridge had 9 tools wrapping the REST API. The canonical 7 are proper schema-defined operations, but fewer tools also brought fewer fields: an order comes back without the customer's phone or address, a product without its categories. That's the next slide.
+**Only if asked** ("didn't this used to be nine?"): yes, the old bridge had 9 thin REST wrappers. The canonical 7 are proper schema-defined operations.
 
----
+Point at the small line under the table: these return less than the old bridge did. Customer personal data is left out on purpose, the right call for anything an AI reads. Some product data, like categories, is just missing for now, and I opened an issue for it.
 
-## Slide 17: The new abilities are thin. For now.
-
-These abilities are where WooCommerce is going, and the old MCP endpoint is deprecated. But look at what they return today. The demo coming up later needs the customer's phone, the shipping country and the product category. None of that comes back. I opened an issue about it.
-
-So in these demos I'll still use the now deprecated WooCommerce built-in MCP, which returns the full REST data. Same idea, one tool per ability, older names: `woocommerce-orders-list` instead of `woocommerce/orders-query`.
-
-**Only if asked:** yes, you could add the missing fields yourself with core's `wp_register_ability_args` filter. That's a hack, not a solution.
+**Only if asked** ("so how does your demo know the categories?"): a few lines of my own, on core's `wp_register_ability_args` filter, add categories to `products-query` and let it filter by them. Same names and shapes as the REST API, so nothing changes if WooCommerce adds them itself.
 
 ---
 
-## Slide 18: Live demo
+## Slide 17: Live demo
 
 _One prompt, live. Keep it under 90 seconds._
 
 "What were my total sales in the last year, broken down by month?"
 
-While it runs: the tool on screen is `woocommerce-orders-list`, one tool per ability on the deprecated endpoint. A real ability with a real schema, nothing written for this demo.
+While it runs: the tool on screen is `mcp-adapter-execute-ability`; point at its ability name parameter, `woocommerce/orders-query`. A real ability with a real schema, nothing written for this demo.
 
-When the answer lands, point at two things: Claude decided what counts as a sale (the cancelled order is left out), and Claude did the adding up. "It guessed what 'sales' means and did the maths itself. Hold that thought." It pays off on slide 26.
+When the answer lands, point at two things: Claude decided what counts as a sale (the cancelled order is left out), and Claude did the adding up. "It guessed what 'sales' means and did the maths itself. Hold that thought." It pays off on slide 25.
 
 Then gesture at the other prompts on screen: "Stock checks, order lists, updates, all the same way. You'll see much more later." Move on.
 
@@ -213,13 +206,13 @@ Then gesture at the other prompts on screen: "Stock checks, order lists, updates
 
 ---
 
-## Slide 19: Section 5: Creating your own abilities
+## Slide 18: Section 5: Creating your own abilities
 
 WooCommerce's abilities are just the start. Your plugin can join in. The example is WooCommerce-specific, but the pattern is the same for any plugin.
 
 ---
 
-## Slide 20: Step 1: Register a category
+## Slide 19: Step 1: Register a category
 
 One call on `wp_abilities_api_categories_init`. It groups your abilities in the Explorer, the CLI, and any UI that lists them. Ten seconds, move on.
 
@@ -227,7 +220,7 @@ One call on `wp_abilities_api_categories_init`. It groups your abilities in the 
 
 ---
 
-## Slide 21: Step 2: Register the ability
+## Slide 20: Step 2: Register the ability
 
 Two things to say out loud:
 
@@ -245,13 +238,13 @@ Two things to say out loud:
 
 ---
 
-## Slide 22: Section 6: Live demo
+## Slide 21: Section 6: Live demo
 
 Real plugin. Real courier API. The store is a demo install, because you don't want to watch me ship 200 packages to my own house.
 
 ---
 
-## Slide 23: The prompt
+## Slide 22: The prompt
 
 Type (or paste) this into Claude Code:
 
@@ -265,27 +258,27 @@ Once all labels are created, generate the end-of-day report and request a collec
 
 For every order where a label was created, send an SMS to the customer with the shipping date and tracking number.
 
-Then mark each of those orders as completed.
+Then set each of those orders as completed, after adding an order note stating the DPD issuing and SMS sent or not.
 
 ---
 
-Before running, remind them: this is the job that needs the customer's phone and the product categories, which is why we're on the deprecated endpoint. Then one line: "Don't run this in production without testing first. And it eats tokens like a very capable intern paid per word they think."
+Before running, one line: "Don't run this in production without testing first. And it eats tokens like a very capable intern paid per word they think."
 
 _Run it. Stay calm. Let it work._
 
 **Time budget:** about 3 minutes with 4 or 5 orders (roughly 25 to 30 tool calls). Hard stop at 5 minutes: if it's still going, "you get the idea", let it finish in the background, and move on.
 
-**While it runs:** one tool per ability, under the deprecated endpoint's names. Read them out as they scroll past: `woocommerce-orders-list`, `woo-dpd-portugal-create-shipping-label`, `webdados-toolbox-send-sms`. Three plugins, three authors, one prompt.
+**While it runs:** every call shows up as `mcp-adapter-execute-ability`. Read out the ability names as they scroll past: `woocommerce/`, `woo-dpd-portugal/`, `webdados-toolbox/`. Three plugins, three authors, one prompt.
 
-Once it's done: let the applause land, then press next. "How cool was that?" fades in. Pause. Press next again for "Well... it depends." Press next once more to move on. Stepping backward from slide 24 into this one shows both lines, and prev from there hides them one at a time.
+Once it's done: let the applause land, then press next. "How cool was that?" fades in. Pause. Press next again for "Well... it depends." Press next once more to move on. Stepping backward from slide 23 into this one shows both lines, and prev from there hides them one at a time.
 
 ---
 
-## Slide 24: Same abilities, smarter caller
+## Slide 23: Same abilities, smarter caller
 
 This backs the "well, it depends".
 
-Left column: what Claude just did. One `orders-query`. Then, for the volume rule, a `products-query` per line item to check the category, uncached, because it has no reason to cache. Then a label, a status change and an SMS, per order. (The pills use the new ability names; on screen you saw the old endpoint's, like `woocommerce-orders-list` and `woocommerce-products-get`. Same steps.) Even for these few orders that's dozens of calls, and between every one Claude is counting, checking and deciding, in tokens. On a real morning with a real order volume, multiply that.
+Left column: what Claude just did. One `orders-query`. Then, for the volume rule, a `products-query` per line item to check the category, uncached, because it has no reason to cache. Then a label, a note, a status change and an SMS, per order. Even for these few orders that's dozens of calls, and between every one Claude is counting, checking and deciding, in tokens. On a real morning with a real order volume, multiply that.
 
 Right column: if it's the same job with the same rules every morning, none of that reasoning is needed. One custom ability, `my-custom-abilities/process-daily-orders`, takes a date. It calls the exact same abilities, from PHP instead of from an LLM, with the product lookups cached. Same abilities. The only thing that changed is who's calling them.
 
@@ -293,29 +286,29 @@ Right column: if it's the same job with the same rules every morning, none of th
 
 ---
 
-## Slide 25: Section 7: What this changes for you
+## Slide 24: Section 7: What this changes for you
 
 You've been writing hooks for years. This isn't a replacement. It's an upgrade.
 
 ---
 
-## Slide 26: Register once. Let everything in.
+## Slide 25: Register once. Let everything in.
 
 One registration, every surface: PHP, REST, WP-CLI, MCP, JavaScript, and whatever comes next.
 
-Last bullet: already made on slide 24, and it's the payoff for slide 18's sales total, where the agent guessed what counts and did the maths. Point at it, five seconds.
+Last bullet: already made on slide 23, and it's the payoff for slide 17's sales total, where the agent guessed what counts and did the maths. Point at it, five seconds.
 
-The yellow box: WooCommerce deprecated its own MCP bridge and moved to the shared Adapter (the old bridge is still shipped, marked for removal). Unlike your own abilities, WooCommerce's did change in the move: the new domain ones return less data, which is why today's demos ran on the old bridge (slide 17).
+The yellow box is the proof: WooCommerce deprecated its own MCP bridge and moved to the shared Adapter (the old bridge is still shipped, marked for removal). Nobody's abilities had to change, only the transport. That happened between writing this talk and giving it.
 
 ---
 
-## Slide 27: References
+## Slide 26: References
 
 _Leave this up during Q&A if the next slide isn't needed. Invite people to take a photo._
 
 ---
 
-## Slide 28: Questions or suggestions?
+## Slide 27: Questions or suggestions?
 
 _Done. Breathe. Take questions._
 
