@@ -895,8 +895,28 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
   </div>
 </div>
 
-<!-- SLIDE 21: Live demo WC MCP -->
+<!-- SLIDE 21: The new abilities are thin -->
 <div class="slide" id="s21">
+  <div class="slide-num">4 / MCP Adapter</div>
+  <h2 class="slide-heading">The new abilities are thin. For now.</h2>
+  <p class="slide-subheading">What the shipping demo needs vs. what the abilities return today</p>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:28px;">
+    <table class="slide-table" style="font-size:22px;">
+      <thead><tr><th>The demo needs</th><th><span class="pill pill-blue">woocommerce/orders-query</span> · <span class="pill pill-blue">products-query</span></th></tr></thead>
+      <tbody>
+        <tr><td>Customer phone, for the SMS</td><td><span class="pill pill-red">✗</span>&nbsp;billing email only</td></tr>
+        <tr><td>Shipping country</td><td><span class="pill pill-red">✗</span>&nbsp;no address at all</td></tr>
+        <tr><td>Product category, for "Large Items"</td><td><span class="pill pill-red">✗</span>&nbsp;not returned, not filterable</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight-box warn" style="margin-top:0;font-size:18px;color:#5a4000;">
+      Reported in <a href="https://github.com/woocommerce/woocommerce/issues/69325" style="color:inherit;font-weight:600;">woocommerce/woocommerce#69325</a>. Until it's fixed, today's demos run on the deprecated WooCommerce MCP endpoint, so the tool names on screen won't match these slides.
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 22: Live demo WC MCP -->
+<div class="slide" id="s22">
   <div class="slide-num">4 / MCP Adapter</div>
   <h2 class="slide-heading">Live demo</h2>
   <p class="slide-subheading">Natural language. Real data.</p>
@@ -908,15 +928,15 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
   </ol>
 </div>
 
-<!-- SLIDE 22: Section 5 intro -->
-<div class="slide slide-section" id="s22">
+<!-- SLIDE 23: Section 5 intro -->
+<div class="slide slide-section" id="s23">
   <div class="section-badge" style="background:rgba(255,255,255,0.2);color:#fff;">Section 5</div>
   <h2>Creating your<br>own abilities</h2>
   <p class="hook">WooCommerce's built-in abilities are just the start.<br>Your plugin can join that conversation.</p>
 </div>
 
-<!-- SLIDE 23: wp_register_ability_category -->
-<div class="slide" id="s23">
+<!-- SLIDE 24: wp_register_ability_category -->
+<div class="slide" id="s24">
   <div class="slide-num">5 / Creating abilities</div>
   <h2 class="slide-heading">Step 1: Register a category</h2>
   <p class="slide-subheading">Hook: <code style="font-family:'JetBrains Mono',monospace;color:var(--purple);font-size:22px;">wp_abilities_api_categories_init</code></p>
@@ -934,8 +954,8 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
 );</div>
 </div>
 
-<!-- SLIDE 24: wp_register_ability full example -->
-<div class="slide" id="s24">
+<!-- SLIDE 25: wp_register_ability full example -->
+<div class="slide" id="s25">
   <div class="slide-num">5 / Creating abilities</div>
   <h2 class="slide-heading">Step 2: Register the ability</h2>
   <p class="slide-subheading">Hook: <code style="font-family:'JetBrains Mono',monospace;color:var(--purple);font-size:22px;">wp_abilities_api_init</code></p>
@@ -977,8 +997,8 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
 );</div>
 </div>
 
-<!-- SLIDE 25: The legacy filter -->
-<div class="slide" id="s25">
+<!-- SLIDE 26: The legacy filter -->
+<div class="slide" id="s26">
   <div class="slide-num">5 / Creating abilities</div>
   <h2 class="slide-heading">Step 3: The legacy filter</h2>
   <p class="slide-subheading">One filter. Your entire namespace. Visible to Claude Code.</p>
@@ -998,15 +1018,15 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
   </div>
 </div>
 
-<!-- SLIDE 26: Section 6 intro -->
-<div class="slide slide-section" id="s26">
+<!-- SLIDE 27: Section 6 intro -->
+<div class="slide slide-section" id="s27">
   <div class="section-badge" style="background:rgba(255,255,255,0.2);color:#fff;">Section 6</div>
   <h2>Live demo</h2>
   <p class="hook">Real plugin. Real courier API.<br>Mostly real store.</p>
 </div>
 
-<!-- SLIDE 27: The prompt -->
-<div class="slide" id="s27">
+<!-- SLIDE 28: The prompt -->
+<div class="slide" id="s28">
   <div class="slide-num">6 / Live demo</div>
   <h2 class="slide-heading">One prompt.</h2>
   <p class="slide-subheading">Claude orchestrates everything.</p>
@@ -1020,8 +1040,8 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
   </div>
 </div>
 
-<!-- SLIDE 28: Same abilities, smarter caller -->
-<div class="slide" id="s28">
+<!-- SLIDE 29: Same abilities, smarter caller -->
+<div class="slide" id="s29">
   <div class="slide-num">6 / Live demo</div>
   <h2 class="slide-heading" style="margin-bottom:6px;">Same abilities. Smarter caller.</h2>
   <p class="slide-subheading" style="font-size:22px;margin-bottom:20px;">Fine for a one-off demo. Wasteful for the exact same job every day.</p>
@@ -1033,7 +1053,6 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
         <li><span class="pill pill-blue">woocommerce/orders-query</span><span class="tag">once</span></li>
         <li><span class="pill pill-blue">woocommerce/products-query</span><span class="tag">looped per line item, uncached, to resolve category for the volume rule</span></li>
         <li><span class="pill pill-blue">woo-dpd-portugal/create-shipping-label</span><span class="tag">× order</span></li>
-        <li><span class="pill pill-blue">woocommerce/order-add-note</span><span class="tag">× order</span></li>
         <li><span class="pill pill-blue">woocommerce/order-update-status</span><span class="tag">× order</span></li>
         <li><span class="pill pill-blue">webdados-toolbox/send-sms</span><span class="tag">× order</span></li>
         <li><span class="pill pill-blue">woo-dpd-portugal/request-collect</span><span class="tag">once</span></li>
@@ -1049,7 +1068,7 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
       <div class="internal-note">Internally, in PHP, no LLM in the loop, it calls the exact same abilities:</div>
       <ul>
         <li><span class="pill pill-blue">orders-query</span> → <span class="pill pill-blue">products-query</span> <span class="tag">looped per product, cached</span></li>
-        <li><span class="pill pill-blue">create-shipping-label</span> → <span class="pill pill-blue">order-add-note</span> → <span class="pill pill-blue">order-update-status</span> → <span class="pill pill-blue">send-sms</span> <span class="tag">looped server-side</span></li>
+        <li><span class="pill pill-blue">create-shipping-label</span> → <span class="pill pill-blue">order-update-status</span> → <span class="pill pill-blue">send-sms</span> <span class="tag">looped server-side</span></li>
         <li><span class="pill pill-blue">request-collect</span> → <span class="pill pill-blue">end-of-day-report</span> <span class="tag">once, to close the day</span></li>
       </ul>
       <div class="highlight-box" style="margin-top:16px;font-size:14px;padding:12px 16px;line-height:1.45;">
@@ -1059,15 +1078,15 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
   </div>
 </div>
 
-<!-- SLIDE 29: Section 7 closing -->
-<div class="slide slide-section" id="s29">
+<!-- SLIDE 30: Section 7 closing -->
+<div class="slide slide-section" id="s30">
   <div class="section-badge" style="background:rgba(255,255,255,0.2);color:#fff;">Section 7</div>
   <h2>What this changes<br>for you</h2>
   <p class="hook">You've been writing hooks for years.<br>This isn't a replacement*. It's an upgrade.<br><span style="font-size:18px;color:rgba(255,255,255,0.5);">* but it can be</span></p>
 </div>
 
-<!-- SLIDE 30: What changes -->
-<div class="slide" id="s30">
+<!-- SLIDE 31: What changes -->
+<div class="slide" id="s31">
   <div class="slide-num">7 / What changes</div>
   <h2 class="slide-heading">Register once. Let everything in.</h2>
   <p class="slide-subheading">PHP · REST · WP-CLI · MCP · JavaScript · whatever comes next</p>
@@ -1080,12 +1099,12 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
     </ul>
   </div>
   <div class="highlight-box warn" style="margin-top:28px;font-size:17px;color:#5a4000;">
-    <strong>Note:</strong> This is exactly why "register once" matters in practice. When WooCommerce deprecated its own MCP bridge in favor of the shared WordPress MCP Adapter, none of the abilities anyone had registered needed to change, only the transport in front of them did. Earlier versions of this setup (WC 10.3 to 10.8) used a WooCommerce-specific MCP beta with its own endpoint and feature flag. It's deprecated and on its way out; the Adapter shown in Section 4 is the way in.
+    <strong>Note:</strong> WooCommerce has deprecated its own MCP bridge in favor of the shared WordPress MCP Adapter. The move also changed the abilities: the new domain ones return less data, so for now the old bridge still has its uses.
   </div>
 </div>
 
-<!-- SLIDE 31: References -->
-<div class="slide" id="s31">
+<!-- SLIDE 32: References -->
+<div class="slide" id="s32">
   <div class="slide-num">References</div>
   <h2 class="slide-heading">References</h2>
   <div class="two-col" style="flex:1;overflow:auto;">
@@ -1115,13 +1134,14 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
       <ul class="refs">
         <li><a href="https://developer.woocommerce.com/2026/05/12/mcp-abilities-api-10-9/">Canonical WooCommerce abilities (WC 10.9)</a></li>
         <li><a href="https://developer.woocommerce.com/docs/features/mcp/">MCP Integration architecture docs</a></li>
+        <li><a href="https://github.com/woocommerce/woocommerce/issues/69325">woocommerce#69325: data missing from the domain abilities</a></li>
       </ul>
     </div>
   </div>
 </div>
 
-<!-- SLIDE 32: Closing -->
-<div class="slide slide-closing" id="s32">
+<!-- SLIDE 33: Closing -->
+<div class="slide slide-closing" id="s33">
   <img src="https://nakedcatplugins.com/wp-content/uploads/2025/04/wapuu-quica-naked-cat-plugins.png"
        alt="Naked Cat Plugins Wapuu"
        style="position:absolute;top:32px;right:64px;height:160px;width:auto;object-fit:contain;">
@@ -1143,7 +1163,7 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
 <!-- Navigation -->
 <div id="nav">
   <button id="btn-prev" aria-label="Previous slide">‹</button>
-  <span id="counter">1 / 32</span>
+  <span id="counter">1 / 33</span>
   <button id="btn-next" aria-label="Next slide">›</button>
 </div>
 
@@ -1205,7 +1225,7 @@ window.addEventListener('popstate', e => {
   show(n, false);
 });
 
-// Staged reveals within a slide (e.g. slide 27's "Well... it depends.")
+// Staged reveals within a slide (e.g. slide 28's "Well... it depends.")
 function fragmentsOf(n) {
   return Array.from(slides[n].querySelectorAll('.fragment'));
 }
