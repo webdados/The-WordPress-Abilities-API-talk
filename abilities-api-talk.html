@@ -1080,13 +1080,44 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
       <li>When building abilities for deterministic workflows or analytical data: <strong>do the hard work inside the ability</strong>. Don't leave calculation or business logic to the AI agent, it's slower, less reliable, and costs tokens.</li>
     </ul>
   </div>
-  <div class="highlight-box warn" style="margin-top:28px;font-size:17px;color:#5a4000;">
-    <strong>Note:</strong> This is exactly why "register once" matters in practice. When WooCommerce deprecated its own MCP bridge in favor of the shared WordPress MCP Adapter, none of the abilities anyone had registered needed to change, only the transport in front of them did. Earlier versions of this setup (WC 10.3 to 10.8) used a WooCommerce-specific MCP beta with its own endpoint and feature flag. It's deprecated and on its way out; the Adapter shown in Section 4 is the way in.
+</div>
+
+<!-- SLIDE 31: Don't lock it inside your MCP server -->
+<div class="slide" id="s31">
+  <div class="slide-num">7 / What changes</div>
+  <h2 class="slide-heading" style="margin-bottom:6px;">Don't lock it inside your MCP server.</h2>
+  <p class="slide-subheading" style="margin-bottom:18px;">Ship abilities. The MCP server is optional.</p>
+  <div class="two-col" style="gap:32px;">
+    <div class="compare-col">
+      <h3>🔒 Proprietary MCP server</h3>
+      <ul>
+        <li style="font-size:18px;margin-bottom:10px;">Features wired straight into the server</li>
+        <li style="font-size:18px;margin-bottom:10px;">Reachable from that one MCP endpoint, nowhere else</li>
+        <li style="font-size:18px;margin-bottom:10px;">No PHP, REST, WP-CLI, JavaScript or Command Palette</li>
+        <li style="font-size:18px;margin-bottom:10px;">Other MCP servers can't use them</li>
+        <li style="font-size:18px;margin-bottom:10px;">Its own auth, its own setup, for every plugin</li>
+      </ul>
+    </div>
+    <div class="compare-col">
+      <h3>🧩 Abilities first</h3>
+      <ul>
+        <li style="font-size:18px;margin-bottom:10px;">Features registered as abilities</li>
+        <li style="font-size:18px;margin-bottom:10px;">PHP, REST, WP-CLI, JavaScript, Command Palette, automatically</li>
+        <li style="font-size:18px;margin-bottom:10px;">Any MCP server built on the standard serves them: the Adapter, Albert, the next one</li>
+        <li style="font-size:18px;margin-bottom:10px;">Your own MCP server, if you want one: the Adapter via Composer, not a reinvention</li>
+      </ul>
+    </div>
+  </div>
+  <div class="highlight-box warn" style="margin-top:16px;font-size:16px;color:#5a4000;">
+    WooCommerce built its own MCP bridge, then deprecated it in favour of the shared Adapter. Its abilities were rebuilt along the way: 9 REST wrappers became 7 domain abilities.
+  </div>
+  <div class="highlight-box" style="margin-top:10px;font-size:16px;">
+    <strong>For example:</strong> Albert ships its own MCP server exactly that way, the Adapter via Composer. On top: OAuth with a consent screen, a switch per ability (read-only by default), a site profile for the agent, customer data masked by default. It would serve this demo's shipping and SMS abilities without a line of code from either plugin.
   </div>
 </div>
 
-<!-- SLIDE 31: References -->
-<div class="slide" id="s31">
+<!-- SLIDE 32: References -->
+<div class="slide" id="s32">
   <div class="slide-num">References</div>
   <h2 class="slide-heading">References</h2>
   <div class="two-col" style="flex:1;overflow:auto;">
@@ -1117,13 +1148,14 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
         <li><a href="https://developer.woocommerce.com/2026/05/12/mcp-abilities-api-10-9/">Canonical WooCommerce abilities (WC 10.9)</a></li>
         <li><a href="https://developer.woocommerce.com/docs/features/mcp/">MCP Integration architecture docs</a></li>
         <li><a href="https://github.com/woocommerce/woocommerce/issues/69325">woocommerce#69325: data missing from the domain abilities</a></li>
+        <li><a href="https://wordpress.org/plugins/albert-ai-butler/">Albert: an MCP server built on the Abilities API</a></li>
       </ul>
     </div>
   </div>
 </div>
 
-<!-- SLIDE 32: Closing -->
-<div class="slide slide-closing" id="s32">
+<!-- SLIDE 33: Closing -->
+<div class="slide slide-closing" id="s33">
   <img src="https://nakedcatplugins.com/wp-content/uploads/2025/04/wapuu-quica-naked-cat-plugins.png"
        alt="Naked Cat Plugins Wapuu"
        style="position:absolute;top:32px;right:64px;height:160px;width:auto;object-fit:contain;">
@@ -1145,7 +1177,7 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
 <!-- Navigation -->
 <div id="nav">
   <button id="btn-prev" aria-label="Previous slide">‹</button>
-  <span id="counter">1 / 32</span>
+  <span id="counter">1 / 33</span>
   <button id="btn-next" aria-label="Next slide">›</button>
 </div>
 

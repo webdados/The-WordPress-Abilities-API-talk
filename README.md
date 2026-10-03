@@ -23,8 +23,8 @@ The live demo uses [DPD Portugal for WooCommerce](https://nakedcatplugins.com/sh
 
 | Version | Length | Slides | Deck | Speaker notes |
 |---|---|---|---|---|
-| Full talk | 60 minutes | 32 | [Open the 60-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk.html) | [`abilities-api-speaker-notes.md`](abilities-api-speaker-notes.md) |
-| Short talk | 30 minutes | 27 | [Open the 30-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk-30min.html) | [`abilities-api-speaker-notes-30min.md`](abilities-api-speaker-notes-30min.md) |
+| Full talk | 60 minutes | 33 | [Open the 60-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk.html) | [`abilities-api-speaker-notes.md`](abilities-api-speaker-notes.md) |
+| Short talk | 30 minutes | 28 | [Open the 30-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk-30min.html) | [`abilities-api-speaker-notes-30min.md`](abilities-api-speaker-notes-30min.md) |
 
 Both cover the same ideas and share the same facts. The 30-minute version is tighter:
 
@@ -52,10 +52,10 @@ Both cover the same ideas and share the same facts. The 30-minute version is tig
 
 | File | Description |
 |---|---|
-| `abilities-api-talk.html` | 60-minute version: self-contained HTML slideshow (32 slides, keyboard navigation, deep links) |
-| `abilities-api-speaker-notes.md` | Speaker notes for all 32 slides of the 60-minute version |
-| `abilities-api-talk-30min.html` | 30-minute version: same format, 27 slides |
-| `abilities-api-speaker-notes-30min.md` | Speaker notes for all 27 slides of the 30-minute version |
+| `abilities-api-talk.html` | 60-minute version: self-contained HTML slideshow (33 slides, keyboard navigation, deep links) |
+| `abilities-api-speaker-notes.md` | Speaker notes for all 33 slides of the 60-minute version |
+| `abilities-api-talk-30min.html` | 30-minute version: same format, 28 slides |
+| `abilities-api-speaker-notes-30min.md` | Speaker notes for all 28 slides of the 30-minute version |
 
 ### Running the slides
 
@@ -91,6 +91,7 @@ Open either deck in any browser: [60-minute version](https://webdados.github.io/
 - [Canonical WooCommerce abilities: WC 10.9](https://developer.woocommerce.com/2026/05/12/mcp-abilities-api-10-9/)
 - [MCP Integration architecture docs](https://developer.woocommerce.com/docs/features/mcp/)
 - [woocommerce/woocommerce#69325: data missing from the domain abilities](https://github.com/woocommerce/woocommerce/issues/69325)
+- [Albert: an MCP server built on the Abilities API](https://wordpress.org/plugins/albert-ai-butler/)
 
 ---
 
@@ -107,6 +108,7 @@ Open either deck in any browser: [60-minute version](https://webdados.github.io/
 - The WooCommerce MCP bridge is described as deprecated but still shipped
 - Short note on what WooCommerce's domain abilities leave out: customer personal data on purpose, product categories for now
 - The shipping workflow prompt adds an order note to each order
+- New slide "Don't lock it inside your MCP server.": ship abilities, keep an MCP server of your own optional and built on the MCP Adapter, with WooCommerce's deprecated bridge and Albert as examples
 - Consumers table: MCP marked as a plugin, A2A, WebMCP and UTCP as "Exploring"
 - The 60-minute title slide no longer names a specific event
 

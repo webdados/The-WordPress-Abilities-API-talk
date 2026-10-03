@@ -325,18 +325,37 @@ Every ability you register today is automatically available to PHP, REST, WP-CLI
 
 On the last bullet: this is a practical tip worth emphasising. If you have an ability that creates shipping labels for all processing orders, the ability itself should query the orders, apply the business logic, and return a clean result. Don't ask the agent to fetch orders first, then loop, then decide volumes. That's slower, more expensive in tokens, and you're trusting the model with logic that should live in your code.
 
-**>>> NOTE <<<**
-Worth calling out explicitly: this is "register once" playing out in the real world. WooCommerce deprecated its own MCP bridge (the `woocommerce_mcp_include_ability` filter we saw on slide 25) in favor of the shared WordPress MCP Adapter covered in Section 4. It's still shipped for now, marked for removal. None of the abilities themselves changed. Only the transport did. If you'd registered abilities the way slide 24 shows, WooCommerce's transition cost you nothing. That's the whole pitch of this slide, proven by a real deprecation that happened between writing this talk and giving it.
+---
+
+## Slide 31: Don't lock it inside your MCP server.
+
+The rant. More and more plugins ship their own MCP server, with their features wired straight into it. Those features now exist in one place: that server. WP-CLI can't call them, REST can't, the Command Palette won't, and neither can any other MCP server.
+
+Register them as abilities instead, and they go everywhere this talk has been about, automatically.
+
+Walk the columns left to right: same feature, two homes. On the left it lives in one server. On the right it lives in WordPress, and every server, CLI and UI built on the standard can use it.
+
+Do you even need your own MCP server? Usually not: the MCP Adapter plugin does it. The one good reason is so your users don't have to install it. Then bundle the Adapter with Composer, the way WooCommerce and Albert do. The newest Adapter on the site is the one that runs, so you're never stuck on your own copy.
+
+The yellow box: WooCommerce had its own bridge and has already deprecated it for the shared Adapter. That's the bridge the `woocommerce_mcp_include_ability` filter on slide 25 scoped; WC 10.3 to 10.8 ran it as a beta with its own endpoint and feature flag. Its abilities had to be rebuilt along the way: nine REST wrappers became seven domain abilities, returning less data, as on slide 20. That's what starting proprietary cost them.
+
+For example, Albert. It's an MCP server, but the MCP part isn't its own: it pulls in the official MCP Adapter with Composer, through a shared autoloader, so if the site already has a newer Adapter, that's the one Albert uses. No fork, no second copy fighting the first. Everything it adds sits on top: OAuth, a switch per ability, customer data masked by default. I pointed it at this demo store and the shipping and SMS abilities were all there, ready to use. Neither plugin knows Albert exists.
+
+Spend a beat on Albert's "read-only by default": it exposes only abilities marked read-only until the site owner switches the others on, one by one. A policy a standard-based server applies to every plugin's abilities at once.
+
+**Only if asked** ("how does the newest one win?"): Albert and WooCommerce both load the Adapter through the Jetpack Autoloader, which picks the highest version of each class across all active plugins. That has a catch: with the Adapter plugin switched off, WooCommerce's own older bundled copy takes over. Keep the Adapter plugin itself installed and up to date.
+
+**Only if asked** ("what if my feature is sensitive?"): then it needs a strict `permission_callback`, and maybe no `meta.public`, so it never reaches MCP at all. Need more, like OAuth or per-ability switches? Build that into an MCP server on the Adapter, the way Albert does. A separate proprietary server adds one more endpoint to secure, not more security.
 
 ---
 
-## Slide 31: References
+## Slide 32: References
 
 _Leave this slide up during Q&A. Invite people to scan/copy the links._
 
 ---
 
-## Slide 32: Questions or suggestions?
+## Slide 33: Questions or suggestions?
 
 _Done. Breathe. Take questions._
 
