@@ -989,11 +989,11 @@
 <div class="slide" id="s26">
   <div class="slide-num">7 / What changes</div>
   <h2 class="slide-heading">Don't lock it inside your MCP server.</h2>
-  <p class="slide-subheading">Ship abilities. The MCP server is optional.</p>
+  <p class="slide-subheading">Ship abilities. The MCP Adapter serves them.</p>
   <div class="body" style="margin-top:12px;">
     <ul>
       <li>Register your features as <strong>abilities</strong>. Every surface and every MCP server picks them up automatically, with nothing else to do.</li>
-      <li>An MCP server of your own is <strong>optional</strong>. The reason to ship one is so your users don't need the MCP Adapter plugin: bundle the Adapter with Composer, and the newest one on the site runs.</li>
+      <li>You <strong>don't need an MCP server of your own</strong>. Depend on the MCP Adapter plugin: declare it as a required plugin, or offer a one-click install. Bundling it with Composer is deprecated.</li>
       <li><strong>Don't reinvent the wheel.</strong> A proprietary server makes your features MCP-only, and nothing else in WordPress can reach them.</li>
     </ul>
   </div>
@@ -1001,7 +1001,7 @@
     WooCommerce built its own MCP bridge, then deprecated it in favour of the shared Adapter. Its abilities were rebuilt along the way: 9 REST wrappers became 7 domain abilities.
   </div>
   <div class="highlight-box" style="margin-top:12px;font-size:17px;">
-    <strong>For example:</strong> Albert ships its own MCP server exactly that way, the Adapter via Composer, and adds OAuth, per-ability switches and masked customer data on top. It would serve this demo's shipping and SMS abilities without a line of code from either plugin.
+    <strong>For example:</strong> Albert builds on the MCP Adapter and adds OAuth, per-ability switches and masked customer data on top. It would serve this demo's shipping and SMS abilities without a line of code from either plugin.
   </div>
 </div>
 

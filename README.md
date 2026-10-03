@@ -108,7 +108,7 @@ Open either deck in any browser: [60-minute version](https://webdados.github.io/
 - The WooCommerce MCP bridge is described as deprecated but still shipped
 - Short note on what WooCommerce's domain abilities leave out: customer personal data on purpose, product categories for now
 - The shipping workflow prompt adds an order note to each order
-- New slide "Don't lock it inside your MCP server.": ship abilities, keep an MCP server of your own optional and built on the MCP Adapter, with WooCommerce's deprecated bridge and Albert as examples
+- New slide "Don't lock it inside your MCP server.": ship abilities and depend on the MCP Adapter plugin instead of shipping an MCP server of your own, with WooCommerce's deprecated bridge and Albert as examples
 - Consumers table: MCP marked as a plugin, A2A, WebMCP and UTCP as "Exploring"
 - The 60-minute title slide no longer names a specific event
 

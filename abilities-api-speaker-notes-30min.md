@@ -306,11 +306,11 @@ The rant. More and more plugins ship their own MCP server, with their features w
 
 Register them as abilities instead, and they go everywhere this talk has been about, automatically.
 
-Do you even need your own MCP server? Usually not: the MCP Adapter plugin does it. The one good reason is so your users don't have to install it. Then bundle the Adapter with Composer, the way WooCommerce and Albert do. The newest Adapter on the site is the one that runs, so you're never stuck on your own copy.
+Do you even need your own MCP server? No. The MCP Adapter plugin is the server, and since it moved to WordPress.org that's the official way to get it. Make it a dependency: a `Requires Plugins` header, or, if your plugin should still activate without it, a notice with a one-click install. Bundling the Adapter with Composer used to be the way. It's deprecated now: a bundled copy logs a "doing it wrong" notice.
 
 The yellow box: WooCommerce had its own bridge and has already deprecated it for the shared Adapter. Its abilities had to be rebuilt along the way: nine REST wrappers became seven domain abilities, returning less data, as on slide 16. That's what starting proprietary cost them.
 
-For example, Albert. It's an MCP server, but the MCP part isn't its own: it pulls in the official MCP Adapter with Composer, through a shared autoloader, so if the site already has a newer Adapter, that's the one Albert uses. No fork, no second copy fighting the first. Everything it adds sits on top: OAuth, a switch per ability, customer data masked by default. I pointed it at this demo store and the shipping and SMS abilities were all there, ready to use. Neither plugin knows Albert exists.
+For example, Albert. The MCP part isn't its own: it's the official MCP Adapter, and everything Albert adds sits on top: OAuth, a switch per ability, customer data masked by default. I pointed it at this demo store and the shipping and SMS abilities were all there, ready to use. Neither plugin knows Albert exists.
 
 **Only if asked** ("what if my feature is sensitive?"): then it needs a strict `permission_callback`, and maybe no `meta.public`, so it never reaches MCP at all. Need more, like OAuth or per-ability switches? Build that into an MCP server on the Adapter, the way Albert does. A separate proprietary server adds one more endpoint to secure, not more security.
 

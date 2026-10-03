@@ -1086,7 +1086,7 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
 <div class="slide" id="s31">
   <div class="slide-num">7 / What changes</div>
   <h2 class="slide-heading" style="margin-bottom:6px;">Don't lock it inside your MCP server.</h2>
-  <p class="slide-subheading" style="margin-bottom:18px;">Ship abilities. The MCP server is optional.</p>
+  <p class="slide-subheading" style="margin-bottom:18px;">Ship abilities. The MCP Adapter serves them.</p>
   <div class="two-col" style="gap:32px;">
     <div class="compare-col">
       <h3>🔒 Proprietary MCP server</h3>
@@ -1103,8 +1103,8 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
       <ul>
         <li style="font-size:18px;margin-bottom:10px;">Features registered as abilities</li>
         <li style="font-size:18px;margin-bottom:10px;">PHP, REST, WP-CLI, JavaScript, Command Palette, automatically</li>
-        <li style="font-size:18px;margin-bottom:10px;">Any MCP server built on the standard serves them: the Adapter, Albert, the next one</li>
-        <li style="font-size:18px;margin-bottom:10px;">Your own MCP server, if you want one: the Adapter via Composer, not a reinvention</li>
+        <li style="font-size:18px;margin-bottom:10px;">Any MCP server built on the Adapter serves them, Albert's included</li>
+        <li style="font-size:18px;margin-bottom:10px;">Need more? Build it on the MCP Adapter plugin, not a reinvention</li>
       </ul>
     </div>
   </div>
@@ -1112,7 +1112,7 @@ STDIO: <span class="s">wp mcp-adapter serve</span></div>
     WooCommerce built its own MCP bridge, then deprecated it in favour of the shared Adapter. Its abilities were rebuilt along the way: 9 REST wrappers became 7 domain abilities.
   </div>
   <div class="highlight-box" style="margin-top:10px;font-size:16px;">
-    <strong>For example:</strong> Albert ships its own MCP server exactly that way, the Adapter via Composer. On top: OAuth with a consent screen, a switch per ability (read-only by default), a site profile for the agent, customer data masked by default. It would serve this demo's shipping and SMS abilities without a line of code from either plugin.
+    <strong>For example:</strong> Albert builds on the MCP Adapter. On top: OAuth with a consent screen, a switch per ability (read-only by default), a site profile for the agent, customer data masked by default. It would serve this demo's shipping and SMS abilities without a line of code from either plugin.
   </div>
 </div>
 
