@@ -168,13 +168,13 @@ Not a chatbot bolted onto your admin. Your actual store data, your actual permis
 
 Three steps, and none of them is WooCommerce-specific.
 
-One: install the MCP Adapter. It's not on WordPress.org yet, so download the zip from the GitHub releases page and upload it like any plugin. Activate it and that's it: it creates a default MCP server. No feature flag, no settings screen. It doesn't turn each ability into its own tool: it gives the agent three, discover, inspect and execute, and every public ability is reachable through those.
+One: install the MCP Adapter. It's on WordPress.org now, so search for it under Plugins, Add New, like any plugin. Activate it and that's it: it creates a default MCP server. No feature flag, no settings screen. It doesn't turn each ability into its own tool: it gives the agent three, discover, inspect and execute, and every public ability is reachable through those.
 
 Two: an Application Password, for a user who can actually do what you're going to ask. For WooCommerce, a Shop Manager is enough: the abilities check the same capabilities as the REST API. WordPress shows it once, so copy it.
 
 Three: one command. Base64 the username and password, send it as a Basic auth header, and point Claude Code at the adapter's endpoint. Claude Code speaks HTTP natively, so there's no Node and no proxy. Restart Claude Code, done.
 
-**Skip if behind:** the WP-CLI one-liner on the slide does the download and activation in one go; publishing on WordPress.org is on the 7.2 roadmap; the STDIO transport (`wp mcp-adapter serve --user=<admin>`) for local dev; that this replaced the old WooCommerce feature flag.
+**Skip if behind:** the WP-CLI one-liner on the slide does the install and activation in one go; bundling it with Composer is deprecated since 0.7.0; the STDIO transport (`wp mcp-adapter serve --user=<admin>`) for local dev; that this replaced the old WooCommerce feature flag.
 
 ---
 

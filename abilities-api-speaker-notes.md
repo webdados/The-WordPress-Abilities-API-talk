@@ -163,7 +163,7 @@ Note the rename from earlier versions of this talk: this section used to be fram
 
 ## Slide 17: Install the MCP Adapter
 
-Say plainly: this is not a WordPress.org plugin (yet). Publishing it there is on the 7.2 roadmap. For now you get it from GitHub, `github.com/WordPress/mcp-adapter`: Releases, download the plugin zip, upload and activate like any other plugin. Or one WP-CLI command that does the same thing. Composer still works, but the project no longer recommends it.
+Since 0.7.0 (October 2026) it is on WordPress.org: Plugins, Add New, search "MCP Adapter", install and activate like any other plugin. Or `wp plugin install mcp-adapter --activate`. Bundling it as a Composer library is now deprecated.
 
 No feature flag, no settings screen to visit. Activating the plugin is enough: it creates a default MCP server automatically. It doesn't turn every public ability into its own MCP tool. It exposes three tools, discover, get ability info and execute, and the agent uses those to find and run any public ability. Two transports ship out of the box: HTTP at `/wp-json/mcp/mcp-adapter-default-server`, and STDIO via `wp mcp-adapter serve --user=<admin>` for local dev.
 

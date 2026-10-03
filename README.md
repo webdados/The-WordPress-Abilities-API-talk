@@ -81,7 +81,7 @@ Open either deck in any browser: [60-minute version](https://webdados.github.io/
 - [Roadmap to 7.2](https://make.wordpress.org/core/2026/09/18/roadmap-to-7-2/)
 - [AI plugin (includes the Abilities Explorer)](https://wordpress.org/plugins/ai/)
 - [WordPress MCP Adapter intro](https://developer.wordpress.org/news/2026/02/from-abilities-to-ai-agents-introducing-the-wordpress-mcp-adapter/)
-- [WordPress MCP Adapter (GitHub)](https://github.com/WordPress/mcp-adapter)
+- [WordPress MCP Adapter (WordPress.org)](https://wordpress.org/plugins/mcp-adapter/)
 - [WP-CLI ability command docs](https://developer.wordpress.org/cli/commands/ability/)
 - [WP-CLI ability command (GitHub)](https://github.com/wp-cli/ability-command)
 - [Six Months of Core AI](https://make.wordpress.org/ai/2025/12/03/six-months-of-core-ai/)
@@ -102,7 +102,7 @@ Open either deck in any browser: [60-minute version](https://webdados.github.io/
 - WordPress 7.1's unified `meta.public` flag: added to the timeline, used in the custom ability example, and explained on the core abilities slide, with the point that exposure is not authorisation
 - Corrected what the three core abilities return, and that since 7.1 they are exposed to REST and MCP
 - The MCP Adapter's default server exposes three tools (discover, inspect, execute) rather than one tool per ability; demo notes updated to match
-- MCP Adapter install via the GitHub zip or a single WP-CLI command; Composer is no longer recommended
+- MCP Adapter installed from WordPress.org (new home since 0.7.0) or with a single WP-CLI command; bundling it with Composer is deprecated
 - WooCommerce abilities use the same capabilities as the WooCommerce REST API (a Shop Manager works), not a fixed `manage_woocommerce` check
 - The WooCommerce MCP bridge is described as deprecated but still shipped
 - Short note on what WooCommerce's domain abilities leave out: customer personal data on purpose, product categories for now
