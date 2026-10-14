@@ -287,6 +287,35 @@ Then set each of those orders as completed, after adding an order note stating t
 
 ---
 
+**Alternative version, only if there's time: with InvoiceXpress.** Not on the slides; the slide keeps the prompt above. Use this one instead when the talk is running ahead (about 2 minutes more than the main prompt). It adds two steps from a fourth plugin, Invoicing with InvoiceXpress for WooCommerce: the delivery note is issued before each DPD label, so the label carries its AT code, and once the orders are completed they are invoiced.
+
+---
+
+Get all processing orders.
+
+For each order, first issue the InvoiceXpress delivery note, then create a DPD shipping label for next Friday, 1 volume per order, unless the order contains items from the "Large Items" category, in which case add 1 extra volume per unit sold of that category.
+
+Once all labels are created, generate the end-of-day report and request a collection with the note "ring the bell".
+
+For every order where a label was created, send an SMS to the customer with the shipping date and tracking number.
+
+Then set each of those orders as completed, after adding an order note stating the DPD issuing and SMS sent or not.
+
+Finally, issue an InvoiceXpress invoice-receipt for each of those completed orders.
+
+---
+
+**What to point at:** the delivery note goes first because DPD Portugal reads its AT code from the order when it creates the label. Two plugins that know nothing about each other's abilities, chained by the order of the prompt. And the invoice-receipt only after "completed": the plugin checks the order status, so a paid, completed order is invoiced without a single question, while an unpaid one would make Claude stop and ask.
+
+**Extra checks before the talk, for this version only:**
+- InvoiceXpress Pro 10.0 or later active, with its licence active (no licence, no abilities), and connected to the InvoiceXpress demo account.
+- Delivery notes and Invoice-receipts enabled in the plugin settings, and Invoice-receipt the only invoicing document type enabled, so Claude doesn't have to ask which one.
+- The demo InvoiceXpress account never talks to the tax authority, so no real AT code comes back: the `demo-fake-at-code.php` mu-plugin writes a fake one right after each delivery note. Check it's in `wp-content/mu-plugins`, and leave "Get AT Code" set to "No", so the plugin doesn't try to fetch a real one and log a failure on every order.
+- The demo customer is in Portugal, so no order needs a tax exemption reason (that would add a question mid-demo).
+- **Never on a real InvoiceXpress account:** the delivery notes and invoices are legal documents and can't be deleted.
+
+**While it runs:** a fourth namespace scrolls past, `woo-billing-with-invoicexpress/`.
+
 Before running: A word of warning. Don't run this in production without testing first. Preferably not while your client is watching their Slack in real time. This prompt will also consume a frankly embarrassing number of tokens. Think of it as hiring a very capable intern and paying per word they think. Don't try this at home, or at least not on a live store.
 
 _Run the prompt. Stay calm. Let it work._
