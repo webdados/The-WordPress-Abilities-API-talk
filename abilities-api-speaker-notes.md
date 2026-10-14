@@ -287,6 +287,22 @@ Then set each of those orders as completed, after adding an order note stating t
 
 ---
 
+**Portuguese version** (for a Portuguese-speaking audience):
+
+---
+
+Obtém todas as encomendas em processamento.
+
+Para cada encomenda, cria uma guia de expedição DPD para a próxima sexta-feira, 1 volume por encomenda, a não ser que a encomenda tenha artigos da categoria "Large Items", caso em que acrescentas 1 volume extra por cada unidade vendida dessa categoria.
+
+Depois de criadas todas as guias, gera o relatório de fim de dia e pede uma recolha com a nota "tocar à campainha".
+
+Para cada encomenda em que foi criada uma guia, envia um SMS ao cliente com a data de envio e o número de seguimento.
+
+Depois, marca cada uma dessas encomendas como concluída, depois de lhe acrescentares uma nota a indicar a emissão da guia DPD e se o SMS foi ou não enviado.
+
+---
+
 **Alternative version, only if there's time: with InvoiceXpress.** Not on the slides; the slide keeps the prompt above. Use this one instead when the talk is running ahead (about 2 minutes more than the main prompt). It adds two steps from a fourth plugin, Invoicing with InvoiceXpress for WooCommerce: the delivery note is issued before each DPD label, so the label carries its AT code, and once the orders are completed they are invoiced.
 
 ---
@@ -302,6 +318,24 @@ For every order where a label was created, send an SMS to the customer with the 
 Then set each of those orders as completed, after adding an order note stating the DPD issuing and SMS sent or not.
 
 Finally, issue an InvoiceXpress invoice-receipt for each of those completed orders.
+
+---
+
+**Portuguese version:**
+
+---
+
+Obtém todas as encomendas em processamento.
+
+Para cada encomenda, emite primeiro a guia de transporte no InvoiceXpress e depois cria uma guia de expedição DPD para a próxima sexta-feira, 1 volume por encomenda, a não ser que a encomenda tenha artigos da categoria "Large Items", caso em que acrescentas 1 volume extra por cada unidade vendida dessa categoria.
+
+Depois de criadas todas as guias, gera o relatório de fim de dia e pede uma recolha com a nota "tocar à campainha".
+
+Para cada encomenda em que foi criada uma guia, envia um SMS ao cliente com a data de envio e o número de seguimento.
+
+Depois, marca cada uma dessas encomendas como concluída, depois de lhe acrescentares uma nota a indicar a emissão da guia DPD e se o SMS foi ou não enviado.
+
+Por fim, emite uma factura-recibo no InvoiceXpress para cada uma dessas encomendas concluídas.
 
 ---
 
