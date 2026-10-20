@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#16161d">
+<title>Speaker Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<style>
+  :root {
+    --bg: #16161d;
+    --bar: #22222c;
+    --text: #e8e8ee;
+    --muted: #9a9aaa;
+    --blue: #7db7ff;
+    --purple: #c9a3ff;
+    --code-bg: #2c2c38;
+    --line: #34343f;
+    --on: #3fb950;
+    --off: #d29922;
+    --fs: 22px;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', -apple-system, Helvetica, Arial, sans-serif;
+    font-size: var(--fs);
+    line-height: 1.55;
+  }
+
+  /* Top bar */
+  #bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    padding-top: max(10px, env(safe-area-inset-top));
+    background: var(--bar);
+    border-bottom: 1px solid var(--line);
+    font-size: 16px;
+  }
+  #bar button, #bar select {
+    font: inherit;
+    color: var(--text);
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 12px;
+    min-height: 40px;
+  }
+  #jump { flex: 1 1 220px; min-width: 0; }
+  #wake { font-weight: 700; }
+  #wake.on { background: var(--on); border-color: var(--on); color: #0b1a0e; }
+  #wake.off { border-color: var(--off); color: var(--off); }
+  .group { display: flex; gap: 4px; }
+  .group button.current { background: var(--blue); border-color: var(--blue); color: #0b1424; font-weight: 700; }
+
+  /* Notes */
+  #notes {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 16px 16px 50vh;
+  }
+  h1 { font-size: 1.4em; color: var(--blue); line-height: 1.2; margin: 0.6em 0 0.2em; }
+  h1 + h2 { color: var(--muted); font-size: 0.8em; margin-top: 0; padding-top: 0; border-top: 0; }
+  h2 {
+    font-size: 1.2em;
+    color: var(--purple);
+    line-height: 1.25;
+    margin: 1.4em 0 0.5em;
+    padding-top: 0.8em;
+    border-top: 2px solid var(--line);
+    scroll-margin-top: 80px;
+  }
+  h3 { font-size: 1.05em; color: var(--blue); }
+  p, li { margin: 0.5em 0; }
+  ul, ol { padding-left: 1.2em; }
+  strong { color: #fff; }
+  em { color: var(--muted); }
+  a { color: var(--blue); }
+  code {
+    font-family: Menlo, monospace;
+    font-size: 0.8em;
+    background: var(--code-bg);
+    padding: 0.1em 0.3em;
+    border-radius: 4px;
+    overflow-wrap: anywhere;
+  }
+  pre { background: var(--code-bg); padding: 12px; border-radius: 8px; white-space: pre-wrap; }
+  pre code { padding: 0; background: none; }
+  hr { border: 0; border-top: 1px dashed var(--line); margin: 1em 0; }
+  h2 + hr, hr + hr { display: none; }
+  table { border-collapse: collapse; }
+  td, th { border: 1px solid var(--line); padding: 4px 8px; }
+  #status { color: var(--muted); }
+</style>
+</head>
+<body>
+<div id="bar">
+  <button id="wake" class="off" type="button">Screen may sleep</button>
+  <select id="jump" aria-label="Jump to slide"></select>
+  <div class="group" role="group" aria-label="Talk version">
+    <button type="button" data-v="30">30 min</button>
+    <button type="button" data-v="60">60 min</button>
+  </div>
+  <div class="group" role="group" aria-label="Text size">
+    <button type="button" id="smaller" aria-label="Smaller text">A-</button>
+    <button type="button" id="bigger" aria-label="Bigger text">A+</button>
+  </div>
+</div>
+<main id="notes"><p id="status">Loading the notes...</p></main>
+
+<script>
+const SOURCES = {
+  '30': 'abilities-api-speaker-notes-30min.md',
+  '60': 'abilities-api-speaker-notes.md',
+};
+const params = new URLSearchParams(location.search);
+const version = SOURCES[params.get('v')] ? params.get('v') : '30';
+const notes = document.getElementById('notes');
+const jump = document.getElementById('jump');
+
+// localStorage can be blocked (private browsing), so every access is guarded
+function load(key, fallback) {
+  try { return localStorage.getItem(key) ?? fallback; } catch (e) { return fallback; }
+}
+function save(key, value) {
+  try { localStorage.setItem(key, value); } catch (e) {}
+}
+
+// Version switch
+document.querySelectorAll('[data-v]').forEach(b => {
+  b.classList.toggle('current', b.dataset.v === version);
+  b.addEventListener('click', () => {
+    if (b.dataset.v !== version) location.search = '?v=' + b.dataset.v;
+  });
+});
+
+// Text size
+let fs = parseInt(load('notes-fs', '22'), 10) || 22;
+function applyFs() { document.documentElement.style.setProperty('--fs', fs + 'px'); save('notes-fs', fs); }
+document.getElementById('smaller').addEventListener('click', () => { fs = Math.max(14, fs - 2); applyFs(); });
+document.getElementById('bigger').addEventListener('click', () => { fs = Math.min(40, fs + 2); applyFs(); });
+applyFs();
+
+// Keep the screen awake. iOS releases the lock when the page is hidden,
+// so it is requested again whenever the page becomes visible.
+const wakeBtn = document.getElementById('wake');
+let wakeLock = null;
+let wantAwake = false;
+function showWake() {
+  const on = !!wakeLock && !wakeLock.released;
+  wakeBtn.classList.toggle('on', on);
+  wakeBtn.classList.toggle('off', !on);
+  wakeBtn.textContent = on ? 'Screen stays on' : 'Screen may sleep';
+}
+async function requestWake() {
+  try {
+    wakeLock = await navigator.wakeLock.request('screen');
+    wakeLock.addEventListener('release', showWake);
+  } catch (e) {
+    wakeLock = null;
+  }
+  showWake();
+}
+if ('wakeLock' in navigator) {
+  wakeBtn.addEventListener('click', async () => {
+    if (wakeLock && !wakeLock.released) {
+      wantAwake = false;
+      await wakeLock.release();
+      wakeLock = null;
+      showWake();
+    } else {
+      wantAwake = true;
+      requestWake();
+    }
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (wantAwake && document.visibilityState === 'visible') requestWake();
+  });
+} else {
+  wakeBtn.textContent = 'Keep awake not supported';
+  wakeBtn.disabled = true;
+}
+
+// Notes
+fetch(SOURCES[version])
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+  .then(md => {
+    notes.innerHTML = marked.parse(md);
+    notes.querySelectorAll('a[href^="http"]').forEach(a => { a.target = '_blank'; a.rel = 'noopener'; });
+    document.title = 'Speaker Notes (' + version + ' min)';
+
+    const sections = [...notes.querySelectorAll('h2')].filter(h => h.previousElementSibling?.tagName !== 'H1');
+    sections.forEach((h, i) => {
+      h.id = 's' + i;
+      jump.add(new Option(h.textContent, h.id));
+    });
+    jump.addEventListener('change', () => document.getElementById(jump.value).scrollIntoView());
+
+    // Keep the menu on the section being read, and remember the position
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { jump.value = e.target.id; save('notes-pos-' + version, e.target.id); } });
+    }, { rootMargin: '-80px 0px -70% 0px' });
+    sections.forEach(h => observer.observe(h));
+
+    const pos = document.getElementById(load('notes-pos-' + version, ''));
+    if (pos) pos.scrollIntoView();
+  })
+  .catch(() => {
+    notes.innerHTML = '<p id="status">Could not load the notes. Open this page from the website, not as a local file, and check the connection.</p>';
+  });
+</script>
+</body>
+</html>

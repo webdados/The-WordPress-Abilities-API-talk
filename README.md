@@ -23,8 +23,8 @@ The live demo uses [DPD Portugal for WooCommerce](https://nakedcatplugins.com/sh
 
 | Version | Length | Slides | Deck | Speaker notes |
 |---|---|---|---|---|
-| Full talk | 60 minutes | 33 | [Open the 60-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk.html) | [`abilities-api-speaker-notes.md`](abilities-api-speaker-notes.md) |
-| Short talk | 30 minutes | 28 | [Open the 30-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk-30min.html) | [`abilities-api-speaker-notes-30min.md`](abilities-api-speaker-notes-30min.md) |
+| Full talk | 60 minutes | 33 | [Open the 60-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk.html) | [Read the notes](https://webdados.github.io/The-WordPress-Abilities-API-talk/speaker-notes.html?v=60) · [`abilities-api-speaker-notes.md`](abilities-api-speaker-notes.md) |
+| Short talk | 30 minutes | 28 | [Open the 30-minute deck](https://webdados.github.io/The-WordPress-Abilities-API-talk/abilities-api-talk-30min.html) | [Read the notes](https://webdados.github.io/The-WordPress-Abilities-API-talk/speaker-notes.html?v=30) · [`abilities-api-speaker-notes-30min.md`](abilities-api-speaker-notes-30min.md) |
 
 Both cover the same ideas and share the same facts. The 30-minute version is tighter:
 
@@ -56,6 +56,7 @@ Both cover the same ideas and share the same facts. The 30-minute version is tig
 | `abilities-api-speaker-notes.md` | Speaker notes for all 33 slides of the 60-minute version |
 | `abilities-api-talk-30min.html` | 30-minute version: same format, 28 slides |
 | `abilities-api-speaker-notes-30min.md` | Speaker notes for all 28 slides of the 30-minute version |
+| `speaker-notes.html` | Formatted reader for either set of speaker notes, for a tablet on stage: slide menu, text size, and a button that keeps the screen awake |
 
 ### Running the slides
 
@@ -64,6 +65,10 @@ Open either deck in any browser: [60-minute version](https://webdados.github.io/
 - **Home / End**: first/last slide
 - **URL hash**: link directly to a slide: `#slide-14`
 - **Browser back/forward**: works as expected
+
+### Reading the speaker notes
+
+Open the [30-minute notes](https://webdados.github.io/The-WordPress-Abilities-API-talk/speaker-notes.html?v=30) or the [60-minute notes](https://webdados.github.io/The-WordPress-Abilities-API-talk/speaker-notes.html?v=60) on a tablet. Tap **Screen may sleep** once: it turns green (**Screen stays on**) and the screen won't dim or lock while the page is open.
 
 ---
 
