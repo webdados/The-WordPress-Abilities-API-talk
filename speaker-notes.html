@@ -108,7 +108,7 @@
 </head>
 <body>
 <div id="bar">
-  <button id="wake" class="off" type="button">Screen may sleep</button>
+  <button id="wake" class="off" type="button">Tap to keep screen on</button>
   <select id="jump" aria-label="Jump to slide"></select>
   <div class="group" role="group" aria-label="Talk version">
     <button type="button" data-v="30">30 min</button>
@@ -163,7 +163,7 @@ function showWake() {
   const on = !!wakeLock && !wakeLock.released;
   wakeBtn.classList.toggle('on', on);
   wakeBtn.classList.toggle('off', !on);
-  wakeBtn.textContent = on ? 'Screen stays on' : 'Screen may sleep';
+  wakeBtn.textContent = on ? 'Screen on · tap to allow sleep' : 'Tap to keep screen on';
 }
 async function requestWake() {
   try {

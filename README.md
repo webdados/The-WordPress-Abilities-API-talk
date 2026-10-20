@@ -68,7 +68,7 @@ Open either deck in any browser: [60-minute version](https://webdados.github.io/
 
 ### Reading the speaker notes
 
-Open the [30-minute notes](https://webdados.github.io/The-WordPress-Abilities-API-talk/speaker-notes.html?v=30) or the [60-minute notes](https://webdados.github.io/The-WordPress-Abilities-API-talk/speaker-notes.html?v=60) on a tablet. Tap **Screen may sleep** once: it turns green (**Screen stays on**) and the screen won't dim or lock while the page is open.
+Open the [30-minute notes](https://webdados.github.io/The-WordPress-Abilities-API-talk/speaker-notes.html?v=30) or the [60-minute notes](https://webdados.github.io/The-WordPress-Abilities-API-talk/speaker-notes.html?v=60) on a tablet. Tap **Tap to keep screen on** once: it turns green (**Screen on · tap to allow sleep**) and the screen won't dim or lock while the page is open. Tapping the green button lets the screen sleep again.
 
 ---
 
