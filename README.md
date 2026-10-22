@@ -102,9 +102,9 @@ Open the [30-minute notes](https://webdados.github.io/The-WordPress-Abilities-AP
 
 ## Version history
 
-**v3.0**, to be tagged and presented at WordPress Day for AI 2026, Faro, October 24, 2026
+**v3.0**, WordPress Day for AI 2026, Faro, October 24, 2026 (the 30-minute version was presented)
 - New 30-minute version of the talk, alongside the 60-minute one
-- Both versions re-checked against WordPress 7.1, WooCommerce 11.1 and MCP Adapter 0.6
+- Both versions re-checked against WordPress 7.1, WooCommerce 11.1 and MCP Adapter 0.7
 - WordPress 7.1's unified `meta.public` flag: added to the timeline, used in the custom ability example, and explained on the core abilities slide, with the point that exposure is not authorisation
 - Corrected what the three core abilities return, and that since 7.1 they are exposed to REST and MCP
 - The MCP Adapter's default server exposes three tools (discover, inspect, execute) rather than one tool per ability; demo notes updated to match
@@ -116,6 +116,8 @@ Open the [30-minute notes](https://webdados.github.io/The-WordPress-Abilities-AP
 - New slide "Don't lock it inside your MCP server.": ship abilities and depend on the MCP Adapter plugin instead of shipping an MCP server of your own, with WooCommerce's deprecated bridge and Albert as examples
 - Consumers table: MCP marked as a plugin, A2A, WebMCP and UTCP as "Exploring"
 - The 60-minute title slide no longer names a specific event
+- Slides stay whole on narrow screens such as phones
+- Speaker notes reader for a tablet on stage, with a slide menu, text size and a keep-the-screen-on button
 
 **v2.0**, WordPress Faro Meetup, September 3, 2026 ([recording](https://wordpress.tv/2026/09/28/the-wp-abilities-api-and-how-to-interact-with-woocommerce-using-human-language/))
 - Section 4 rebuilt around the **WordPress MCP Adapter**, replacing the deprecated WooCommerce-specific MCP beta (feature flag, `/wp-json/woocommerce/mcp`, API-key auth, local proxy)
